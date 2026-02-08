@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAMER FINDER PRO | OFFICIAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;900&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root { --neon: #00f2ff; --white: #ffffff; --dark: #050505; --gold: #ffd700; --card: #111; --text: #eee; --red: #ff4757; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--dark); color: var(--text); overflow-x: hidden; padding-top: 50px; }
+        
+        /* 1. ESKİ KOD: REKLAM BANDI */
+        .ad-ticker { position: fixed; top: 0; left: 0; width: 100%; height: 48px; background: rgba(255, 255, 255, 0.05); border-bottom: 2px solid var(--white); backdrop-filter: blur(10px); z-index: 2000; overflow: hidden; display: flex; align-items: center; cursor: pointer; }
+        .ticker-wrapper { display: flex; white-space: nowrap; animation: ticker 25s linear infinite; }
+        .ticker-item { display: inline-flex; align-items: center; padding: 0 35px; color: var(--neon); font-family: 'Orbitron'; font-size: 12px; font-weight: 900; }
+        .ticker-item b { color: var(--gold); margin-right: 5px; }
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* 2. ESKİ KOD: YAN PANEL & REHBER */
+        .side-panel { position: fixed; top: 0; right: -100%; width: 400px; height: 100%; background: #0a0a0a; z-index: 2001; transition: 0.5s; padding: 25px; overflow-y: auto; border-left: 2px solid var(--white); }
+        .side-panel.active { right: 0; }
+        .how-to-work { background: rgba(0, 242, 255, 0.05); border: 1px solid var(--neon); padding: 20px; border-radius: 12px; margin-bottom: 30px; }
+        .how-to-work h4 { color: var(--neon); font-family: 'Orbitron'; font-size: 14px; margin-bottom: 12px; }
+        .how-to-work p { font-size: 11px; color: #ccc; line-height: 1.6; margin-bottom: 8px; }
+
+        /* 3. ESKİ KOD: MATCH MODAL */
+        #matchModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .match-card { background: #0a0a0a; border: 2px solid var(--neon); padding: 40px; border-radius: 20px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 0 30px rgba(0, 242, 255, 0.3); }
+        
+        /* 4. ESKİ KOD: ÜST NAV & YAN BUTONLAR */
+        .top-right-nav { position: fixed; top: 65px; right: 20px; z-index: 1001; }
+        .open-btn { background: var(--white); color: #000; border: none; padding: 14px 28px; border-radius: 12px; font-family: 'Orbitron'; font-weight: 900; cursor: pointer; box-shadow: 0 0 20px rgba(255, 255, 255, 0.3); }
+        .side-buttons { position: fixed; left: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 15px; z-index: 1000; }
+        .side-btn { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; text-decoration: none; font-size: 24px; background: #222; transition: 0.3s; }
+        .bg-wp { background: #25d366; } .bg-report { background: var(--neon); color: #000; } .bg-iban { background: var(--red); }
+
+        /* 5. ESKİ KOD: VIP AVANTAJ KUTUSU */
+        .vip-benefits { background: rgba(255, 215, 0, 0.05); border: 1px dashed var(--gold); border-radius: 15px; padding: 20px; margin-bottom: 30px; }
+        .vip-benefits h4 { color: var(--gold); font-family: 'Orbitron'; font-size: 13px; margin-bottom: 15px; text-align: center; }
+        .benefit-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .benefit-item { font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: #bbb; }
+        .benefit-item i { color: var(--gold); }
+
+        /* ANA TASARIM */
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .header { text-align: center; padding: 40px 20px; }
+        .header h1 { font-family: 'Orbitron'; color: var(--neon); font-size: 3rem; font-weight: 900; text-shadow: 0 0 20px var(--neon); }
+        .vip-banner { display: block; background: linear-gradient(90deg, #ffd700, #ffae00); color: #000; text-align: center; padding: 18px; border-radius: 12px; text-decoration: none; font-weight: 900; font-family: 'Orbitron'; margin-bottom: 10px; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
+
+        /* OYUNLAR & GRID */
+        .search-input { width: 100%; padding: 20px; background: #111; border: 2px solid var(--white); border-radius: 15px; color: white; font-family: 'Orbitron'; margin-bottom: 25px; outline: none; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 15px; }
+        .game-card { background: var(--card); border: 2px solid #222; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
+        .game-card.active { border-color: var(--white); background: rgba(255, 255, 255, 0.1); }
+        .game-card i { font-size: 30px; color: var(--neon); margin-bottom: 12px; display: block; }
+        .game-card p { font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        
+        /* FORM */
+        .post-box { background: #0f0f0f; border-radius: 20px; padding: 40px; border: 2px solid #222; margin: 40px 0; }
+        .type-selector { display: flex; gap: 10px; margin-bottom: 20px; }
+        .type-btn { flex: 1; padding: 18px; border-radius: 10px; border: 2px solid #333; background: #000; color: #888; cursor: pointer; font-size: 13px; font-weight: 900; font-family: 'Orbitron'; }
+        .type-btn.active { border-color: var(--neon); color: var(--neon); background: rgba(0, 242, 255, 0.1); }
+        input { width: 100%; padding: 18px; background: #000; border: 2px solid #333; color: white; border-radius: 12px; margin-top: 15px; outline: none; font-weight: 600; }
+        .btn-post { width: 100%; padding: 22px; border-radius: 15px; border: none; background: var(--neon); color: #000; font-weight: 900; cursor: pointer; margin-top: 25px; font-family: 'Orbitron'; font-size: 18px; }
+        .btn-post:disabled { background: #222; color: #444; cursor: not-allowed; }
+
+        /* LİSTELEME */
+        .clan-room { background: #111; border-radius: 15px; margin-bottom: 20px; border: 2px solid #222; overflow: hidden; }
+        .clan-header { background: #1a1a1a; padding: 15px 20px; border-bottom: 2px solid var(--white); }
+        .feed-item { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
+        .type-tag { font-size: 9px; padding: 5px 10px; border-radius: 6px; font-weight: 900; background: rgba(255, 255, 255, 0.1); color: #fff; border: 1px solid var(--white); margin-right: 10px; }
+        .action-btn { padding: 10px 18px; border-radius: 8px; font-size: 11px; font-weight: 900; border: none; cursor: pointer; background: #222; color: #eee; text-decoration: none; font-family: 'Orbitron'; }
+        .delete-btn { background: #331111; color: var(--red); border: 1px solid var(--red); margin-left: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="matchModal">
+        <div class="match-card">
+            <h2 style="color:var(--neon); font-family: 'Orbitron';">EKİP BULUNDU! 🚀</h2>
+            <p id="matchText" style="margin-top:15px; color:#bbb;">Sana uygun bir grup var!</p>
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <a id="matchLink" href="#" target="_blank" style="flex:1; background:var(--neon); color:#000; padding:18px; text-decoration:none; border-radius:12px; font-weight:900; font-family:'Orbitron';">GRUBA GİT</a>
+                <button onclick="closeMatch()" style="flex:1; background:#222; color:#fff; border:none; border-radius:12px; cursor:pointer; font-weight:900; font-family:'Orbitron';">KAPAT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ad-ticker" onclick="togglePanel()">
+        <div class="ticker-wrapper" id="tickerWrapper">
+            <div class="ticker-item">SİSTEM AKTİF: EKİBİNİ BULMAK İÇİN İLAN YAYINLA!</div>
+        </div>
+    </div>
+
+    <div class="top-right-nav">
+        <button class="open-btn" onclick="togglePanel()"><i class="fas fa-list-ul"></i> ÜYE YAYINLARI & DESTEK</button>
+    </div>
+
+    <div class="side-panel" id="sidePanel">
+        <button onclick="togglePanel()" style="float:right; background:none; border:none; color:#555; font-size:35px; cursor:pointer;">&times;</button>
+        
+        <h2 style="font-family: 'Orbitron'; color: var(--neon); margin-bottom: 20px;">NASIL ÇALIŞIR?</h2>
+        <div class="how-to-work">
+            <h4>🤔 Adım Adım Rehber</h4>
+            <p><b>1. Oyun Seç:</b> Listeden oyununu bul ve tıkla.</p>
+            <p><b>2. İlan Ver:</b> Nickini ve varsa iletişim linkini yaz.</p>
+            <p><b>3. Şifre Koy:</b> İlanı silerken lazım olacak 4 hane belirle.</p>
+            <p><b>4. Süre:</b> Normal ilan 12s, VIP ilan 24s yayında kalır.</p>
+        </div>
+
+        <h2 style="font-family: 'Orbitron'; color: var(--neon); margin-bottom: 20px;">AKTİF ÜYELER</h2>
+        <div id="mainFeed"></div>
+    </div>
+
+    <div class="side-buttons">
+        <a href="https://wa.me/905346625972" target="_blank" class="side-btn bg-wp"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/905346625972?text=Oyun Ekleme Talebi: " target="_blank" class="side-btn bg-report"><i class="fas fa-plus-circle"></i></a>
+        <button onclick="showIban()" class="side-btn bg-iban"><i class="fas fa-hand-holding-heart"></i></button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>GAMER FINDER PRO</h1>
+        </div>
+
+        <a href="https://www.shopier.com/EsenHediyelik/44066442" target="_blank" class="vip-banner">👑 VIP PIN SATIN AL (24 SAAT YAYINDA KAL)</a>
+        
+        <div class="vip-benefits">
+            <h4>👑 VIP ÜYELİK AVANTAJLARI</h4>
+            <ul class="benefit-list">
+                <li class="benefit-item"><i class="fas fa-check-circle"></i> 24 Saat Yayında Kal</li>
+                <li class="benefit-item"><i class="fas fa-check-circle"></i> Daima En Üstte Gözük</li>
+                <li class="benefit-item"><i class="fas fa-check-circle"></i> Altın Çerçeveli İlan</li>
+                <li class="benefit-item"><i class="fas fa-check-circle"></i> VIP Rozeti ve Öncelik</li>
+            </ul>
+        </div>
+
+        <input type="text" class="search-input" id="gameSearch" placeholder="200+ OYUN İÇİNDE ARA..." oninput="handleSearch()">
+        <div class="game-grid" id="gameGrid"></div>
+
+        <div class="post-box">
+            <h3 id="selectedLabel" style="color: var(--neon); font-family: 'Orbitron'; margin-bottom: 15px;">OYUN SEÇİNİZ</h3>
+            <div class="type-selector">
+                <button class="type-btn active" id="type1" onclick="setType('Oyuncuyum', 'type1')">OYUNCUYUM</button>
+                <button class="type-btn" id="type2" onclick="setType('Üye Aranıyor', 'type2')">ÜYE ARANIYOR</button>
+            </div>
+            <input type="text" id="dcName" placeholder="Discord Nick / Oyun İçi Nick" oninput="validate()">
+            <input type="text" id="groupLink" placeholder="WhatsApp / Discord Grup Linki (Zorunlu)" oninput="validate()">
+            <input type="password" id="deletePass" placeholder="4 Haneli Silme Kodu Belirle" oninput="validate()" maxlength="4">
+            <input type="text" id="vipPin" placeholder="VIP PIN (Varsa)">
+            <button class="btn-post" id="postBtn" onclick="checkAndPost()" disabled>İLAN YAYINLA</button>
+        </div>
+    </div>
+
+    <script>
+        // FIREBASE
+        const firebaseConfig = { apiKey: "AIzaSyAilx4UJVBiQE7eO4quYhSiV-FyS3rJtpE", authDomain: "gamer-finder-1ce56.firebaseapp.com", projectId: "gamer-finder-1ce56", storageBucket: "gamer-finder-1ce56.firebasestorage.app", messagingSenderId: "828364718554", appId: "1:828364718554:web:49862dfab150e2bf1440e3" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 200+ OYUN
+        const top10 = [{n:"Rise of Kingdoms", i:"fa-chess-rook"}, {n:"Valorant", i:"fa-crosshairs"}, {n:"LoL", i:"fa-khanda"}, {n:"CS 2", i:"fa-gun"}, {n:"Metin2", i:"fa-sword"}, {n:"GTA Online", i:"fa-car"}, {n:"Roblox", i:"fa-shapes"}, {n:"PUBG Mobile", i:"fa-mobile-screen"}, {n:"Minecraft", i:"fa-cube"}, {n:"Brawl Stars", i:"fa-star"}];
+        const otherGames = ["Apex Legends", "Warzone", "Rainbow Six Siege", "Overwatch 2", "Battlefield 2042", "Destiny 2", "Rust", "Ark: Survival", "Dota 2", "Teamfight Tactics", "Knight Online", "Rise Online", "Black Desert", "WOW", "Lost Ark", "Path of Exile", "FIFA 24", "eFootball", "NBA 2K24", "Euro Truck 2", "Assetto Corsa", "F1 2024", "Forza Horizon 5", "Rocket League", "Among Us", "Fall Guys", "Phasmophobia", "Lethal Company", "Dead by Daylight", "Stardew Valley", "Terraria", "Warframe", "Ready or Not", "Tarkov", "Squad", "Hell Let Loose", "Sea of Thieves", "Left 4 Dead 2", "Unturned", "Garry's Mod", "Fortnite", "Zula", "Point Blank", "Paladins", "Smite", "Street Fighter 6", "Tekken 8", "Mortal Kombat 1", "The Sims 4", "Genshin Impact", "Growtopia", "VRChat", "Rec Room", "Agar.io", "Slither.io", "Chess.com", "Brawlhalla", "Wolfteam", "Project Zomboid", "7 Days to Die", "The Forest", "Sons of the Forest", "Raft", "Subnautica", "Valheim", "V Rising", "New World", "Diablo IV", "Starfield", "Palworld", "Enshrouded", "Helldivers 2", "San Andreas MP", "MTA:SA", "War Thunder", "World of Tanks", "DayZ", "Scum", "Mobile Legends", "Clash of Clans", "Silkroad Online", "Haxball", "Legend Online", "DarkOrbit", "Sanalika", "Habbo", "Blue Protocol", "Throne and Liberty", "XDefiant", "Zenless Zone Zero", "Wuthering Waves", "Wild Rift"];
+
+        let selectedGame = ""; let selectedType = "Oyuncuyum"; let allIlanlar = [];
+
+        function renderGames(searchTerm = "") {
+            const grid = document.getElementById('gameGrid'); grid.innerHTML = "";
+            const combined = [...top10.map(x=>x.n), ...otherGames];
+            const filter = searchTerm === "" ? top10.map(x=>x.n) : combined.filter(n => n.toLowerCase().includes(searchTerm.toLowerCase()));
+            filter.forEach(n => {
+                const icon = top10.find(t=>t.n===n)?.i || "fa-gamepad";
+                grid.innerHTML += `<div class="game-card ${selectedGame === n ? 'active' : ''}" onclick="select('${n}', this)"><i class="fas ${icon}"></i><p>${n}</p></div>`;
+            });
+        }
+
+        function select(n, el) { selectedGame = n; document.querySelectorAll('.game-card').forEach(c => c.classList.remove('active')); el.classList.add('active'); document.getElementById('selectedLabel').innerText = n.toUpperCase(); validate(); }
+        function setType(t, id) { selectedType = t; document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active')); document.getElementById(id).classList.add('active'); validate(); }
+        function handleSearch() { renderGames(document.getElementById('gameSearch').value); }
+        function validate() { 
+            const dc = document.getElementById('dcName').value.trim(); const link = document.getElementById('groupLink').value.trim(); const pass = document.getElementById('deletePass').value.trim();
+            let valid = (selectedGame !== "" && dc !== "" && pass !== ""); 
+            if(selectedType === "Üye Aranıyor" && link === "") valid = false; 
+            document.getElementById('postBtn').disabled = !valid; 
+        }
+        function togglePanel() { document.getElementById('sidePanel').classList.toggle('active'); }
+        function closeMatch() { document.getElementById('matchModal').style.display = "none"; location.reload(); }
+        function showIban() { alert("Barış ESEN\nIBAN: TR23 0015 7000 0000 0110 4800 85"); }
+
+        async function removeIlan(id, originalPass) {
+            const inputPass = prompt("Silme kodunu gir:");
+            if(inputPass === originalPass) { await db.collection("ilanlar").doc(id).delete(); alert("İlan silindi."); } else { alert("Hatalı kod!"); }
+        }
+
+        async function checkAndPost() {
+            const dc = document.getElementById('dcName').value.trim(); const link = document.getElementById('groupLink').value.trim();
+            const pass = document.getElementById('deletePass').value.trim(); const pin = document.getElementById('vipPin').value.trim();
+
+            if(selectedType === "Oyuncuyum") {
+                const match = allIlanlar.find(i => i.game === selectedGame && i.type === "Üye Aranıyor" && i.link !== "#");
+                if(match) {
+                    document.getElementById('matchText').innerText = `${selectedGame} için aktif bir ekip bulundu!`;
+                    document.getElementById('matchLink').href = match.link;
+                    document.getElementById('matchModal').style.display = "flex";
+                }
+            }
+
+            let isVip = false;
+            if(pin !== "") {
+                const pinRef = db.collection("vip_pins").doc(pin);
+                const doc = await pinRef.get();
+                if(doc.exists && !doc.data().used) { isVip = true; await pinRef.update({used: true}); }
+            }
+
+            await db.collection("ilanlar").add({ game: selectedGame, dc: dc, link: link || "#", pass: pass, vip: isVip, type: selectedType, timestamp: firebase.firestore.FieldValue.serverTimestamp() });
+            if(document.getElementById('matchModal').style.display !== "flex") { alert("İlan yayında!"); location.reload(); }
+        }
+
+        // LİSTELEME & SÜRE FİLTRESİ (12S / 24S)
+        db.collection("ilanlar").orderBy("timestamp", "desc").onSnapshot(snap => {
+            let tickerHTML = ""; let data = []; const now = new Date().getTime();
+            snap.forEach(doc => {
+                const d = doc.data();
+                if(d.timestamp) {
+                    const diffHours = (now - d.timestamp.toDate().getTime()) / (1000 * 60 * 60);
+                    if ((d.vip && diffHours < 24) || (!d.vip && diffHours < 12)) {
+                        data.push({...d, id: doc.id});
+                        tickerHTML += `<div class="ticker-item">${d.vip?'<b>👑 VIP</b>':''} ${d.game} - @${d.dc}</div>`;
+                    }
+                }
+            });
+            allIlanlar = data;
+            document.getElementById('tickerWrapper').innerHTML = tickerHTML + tickerHTML;
+            const grouped = data.reduce((acc, p) => { if(!acc[p.game]) acc[p.game] = []; acc[p.game].push(p); return acc; }, {});
+            document.getElementById('mainFeed').innerHTML = Object.keys(grouped).map(gn => `
+                <div class="clan-room" style="${grouped[gn].some(x=>x.vip)?'border:3px solid var(--gold)':''}">
+                    <div class="clan-header"><h3>${gn}</h3></div>
+                    ${grouped[gn].map(p => `
+                        <div class="feed-item">
+                            <div><span class="type-tag">${p.type}</span> <b>@${p.dc}</b> ${p.vip?'👑':''}</div>
+                            <div>
+                                ${p.link !== "#" ? `<a href="${p.link}" target="_blank" class="action-btn" style="background:var(--white);color:#000;">GİT</a>` : ''}
+                                <button onclick="removeIlan('${p.id}', '${p.pass}')" class="action-btn delete-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>`).join('')}
+                </div>`).join('');
+        });
+        renderGames();
+    </script>
+</body>
+</html>
