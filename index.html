@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -252,5 +254,103 @@
         });
         renderGames();
     </script>
+<style>
+    /* NEDEN BİZ BÖLÜMÜ */
+    .why-us-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 50px 0;
+    }
+
+    .why-card {
+        background: #0a0a0a;
+        border: 1px solid #222;
+        padding: 30px;
+        border-radius: 20px;
+        text-align: center;
+        transition: 0.4s;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .why-card:hover {
+        border-color: var(--neon);
+        transform: translateY(-10px);
+        box-shadow: 0 0 30px rgba(0, 242, 255, 0.1);
+    }
+
+    .why-card i {
+        font-size: 40px;
+        color: var(--neon);
+        margin-bottom: 20px;
+        display: block;
+    }
+
+    .why-card h3 {
+        font-family: 'Orbitron';
+        font-size: 16px;
+        color: var(--white);
+        margin-bottom: 12px;
+    }
+
+    .why-card p {
+        font-size: 13px;
+        color: #888;
+        line-height: 1.6;
+    }
+
+    .why-card::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 3px;
+        background: linear-gradient(90deg, transparent, var(--neon), transparent);
+        transform: translateX(-100%);
+        transition: 0.6s;
+    }
+
+    .why-card:hover::before {
+        transform: translateX(100%);
+    }
+
+    .section-title {
+        text-align: center;
+        font-family: 'Orbitron';
+        color: var(--neon);
+        margin-bottom: 40px;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+</style>
+
+<div class="container">
+    <h2 class="section-title">Neden Biz?</h2>
+    
+    <div class="why-us-grid">
+        <div class="why-card">
+            <i class="fas fa-bolt"></i>
+            <h3>Işık Hızında Eşleşme</h3>
+            <p>Gelişmiş algoritmamız sayesinde saniyeler içinde seninle aynı oyunu arayan oyuncularla bağlantı kurmanı sağlıyoruz.</p>
+        </div>
+
+        <div class="why-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Güvenli Topluluk</h3>
+            <p>4 haneli silme kodu ve moderasyon sistemimizle sadece gerçek ve aktif oyuncuların ilanlarına yer veriyoruz.</p>
+        </div>
+
+        <div class="why-card">
+            <i class="fas fa-crown"></i>
+            <h3>VIP Ayrıcalıkları</h3>
+            <p>VIP Pin sistemiyle ilanlarını en üstte tutabilir, 24 saat boyunca görünürlüğünü koruyarak ekibini daha hızlı kurabilirsin.</p>
+        </div>
+
+        <div class="why-card">
+            <i class="fas fa-headset"></i>
+            <h3>7/24 Canlı Destek</h3>
+            <p>Herhangi bir sorunda doğrudan admin panelimize ulaşabilir, oyun ekleme taleplerini anında iletebilirsin.</p>
+        </div>
+    </div>
+</div>
 </body>
 </html>
