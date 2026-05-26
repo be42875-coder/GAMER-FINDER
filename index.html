@@ -16,7 +16,6 @@
         }
 
         body {
-            /* Tam istediğin gibi iç açıcı, soft pastel gradyan arka plan */
             background: linear-gradient(135deg, #bfeae3 0%, #fcf3db 50%, #fcdcd4 100%);
             min-height: 100vh;
             display: flex;
@@ -27,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* Arka plandaki dekoratif yapraklar ve parıltılar */
         .decor-star {
             position: absolute;
             color: #ff9fa9;
@@ -41,14 +39,12 @@
             50% { transform: translateY(-10px) rotate(15deg); }
         }
 
-        /* Üst Başlık ve Kodla Yapılan Yeni Logo */
         .header-container {
             text-align: center;
             margin-bottom: 40px;
             z-index: 2;
         }
 
-        /* Görseldeki klaket logoyu kodla çizdik */
         .custom-logo {
             width: 100px;
             height: 90px;
@@ -105,20 +101,19 @@
             margin-top: 5px;
         }
 
-        /* 3'lü Sosyal Medya Kart Alanı */
         .social-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 25px;
             width: 100%;
             max-width: 850px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             z-index: 2;
         }
 
         .social-box {
             border-radius: 24px;
-            padding: 30px 20px;
+            padding: 35px 20px;
             text-align: center;
             text-decoration: none;
             color: white;
@@ -135,7 +130,6 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
-        /* İkon Çemberleri */
         .icon-circle {
             width: 65px;
             height: 65px;
@@ -144,7 +138,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
@@ -156,32 +150,30 @@
             font-size: 18px;
             font-weight: 600;
             text-decoration: underline;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
-        .social-box p {
-            font-size: 14px;
-            opacity: 0.9;
+        .sub-icon {
+            font-size: 18px;
+            opacity: 0.95;
+            animation: pulse 2s infinite ease-in-out;
         }
 
-        /* Görseldeki Özel Kart Renk Geçişleri */
-        .tiktok-box {
-            background: linear-gradient(45deg, #ff0050 0%, #00f2ea 100%);
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 1; }
         }
+
+        .tiktok-box { background: linear-gradient(45deg, #ff0050 0%, #00f2ea 100%); }
         .tiktok-box .icon-circle i { color: #000000; }
 
-        .instagram-box {
-            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-        }
+        .instagram-box { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .instagram-box .icon-circle i { color: #dc2743; }
 
-        .youtube-box {
-            background: linear-gradient(135deg, #e52d27 0%, #b31217 100%);
-        }
+        .youtube-box { background: linear-gradient(135deg, #e52d27 0%, #b31217 100%); }
         .youtube-box .icon-circle i { color: #ff0000; }
 
-        /* Cam Efektli (Glassmorphism) Hakkımızda Kartı */
-        .about-card {
+        .glass-card {
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -193,30 +185,59 @@
             text-align: center;
             box-shadow: 0 20px 40px rgba(0,0,0,0.05);
             z-index: 2;
+            margin-bottom: 25px;
         }
 
-        .about-card h2 {
+        .glass-card h2 {
             font-size: 28px;
             color: #112240;
             margin-bottom: 15px;
             font-weight: 700;
         }
 
-        .about-card p {
+        .glass-card p {
             font-size: 16px;
             color: #223354;
             line-height: 1.8;
             font-weight: 500;
         }
 
-        /* Mobil Uyumluluk Ayarı */
+        /* Yenilenen İhbar Buton Grubu */
+        .ihbar-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .ihbar-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 32px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .ihbar-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .btn-whatsapp { background: linear-gradient(135deg, #25D366 0%, #075E54 100%); }
+        .btn-telegram { background: linear-gradient(135deg, #229ED9 0%, #0088cc 100%); }
+
         @media (max-width: 768px) {
-            .social-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
+            .social-grid { grid-template-columns: 1fr; gap: 20px; }
             .brand-name { font-size: 32px; }
-            .about-card { padding: 25px; }
+            .glass-card { padding: 25px; }
+            .ihbar-buttons { flex-direction: column; gap: 12px; }
+            .ihbar-btn { justify-content: center; }
         }
     </style>
 </head>
@@ -243,7 +264,7 @@
                 <i class="fa-brands fa-tiktok"></i>
             </div>
             <h3>@icerikkhane</h3>
-            <p>Takipçiler</p>
+            <i class="fa-solid fa-music sub-icon"></i>
         </a>
 
         <a href="https://www.instagram.com/icerikkhane/" target="_blank" class="social-box instagram-box">
@@ -251,7 +272,7 @@
                 <i class="fa-brands fa-instagram"></i>
             </div>
             <h3>@icerikkhane</h3>
-            <p>Takipçiler</p>
+            <i class="fa-solid fa-camera sub-icon"></i>
         </a>
 
         <a href="https://www.youtube.com/@icerikkhane" target="_blank" class="social-box youtube-box">
@@ -259,16 +280,31 @@
                 <i class="fa-solid fa-play"></i>
             </div>
             <h3>@icerikkhane</h3>
-            <p>Takipçiler</p>
+            <i class="fa-solid fa-film sub-icon"></i>
         </a>
 
     </div>
 
-    <div class="about-card">
+    <div class="glass-card">
         <h2>Hakkımızda</h2>
         <p>
             💡 İçerikhane, yaratıcılığın ve hikaye anlatımının buluştuğu yer. Biz, her platformda özgün ve ilgi çekici içerikler üreterek topluluğumuzu büyütüyoruz. 🌟 Filmden vloglara, her anı yakalıyoruz. 📷
         </p>
+    </div>
+
+    <div class="glass-card">
+        <h2>🚨 Mizah İhbar Hattı</h2>
+        <p>Gündem yaratacak komik videoları, capsleri ve mizah içeriklerini aşağıdaki butonları kullanarak bizimle paylaş, İçerikhane ekranlarında yayınlayalım!</p>
+        
+        <div class="ihbar-buttons">
+            <a href="https://wa.me/905349644975?text=Merhaba,%20İçerikhane%20için%20bir%20mizah%20ihbarında%20bulunmak%20istiyorum." target="_blank" class="ihbar-btn btn-whatsapp">
+                <i class="fa-brands fa-whatsapp" style="font-size: 22px;"></i> WhatsApp ile Gönder
+            </a>
+
+            <a href="https://t.me/+905349644975" target="_blank" class="ihbar-btn btn-telegram">
+                <i class="fa-brands fa-telegram" style="font-size: 22px;"></i> Telegram ile Gönder
+            </a>
+        </div>
     </div>
 
 </body>
