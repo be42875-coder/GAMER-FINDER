@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -30,13 +31,14 @@
             position: absolute;
             color: #ff9fa9;
             font-size: 24px;
-            opacity: 0.6;
+            opacity: 0.5;
             animation: float 4s ease-in-out infinite;
+            pointer-events: none;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-10px) rotate(15deg); }
+            50% { transform: translateY(-12px) rotate(15deg); }
         }
 
         .header-container {
@@ -51,9 +53,9 @@
             background: linear-gradient(135deg, #ffd452 0%, #f89e13 100%);
             border: 4px solid #1a2a4a;
             border-radius: 16px;
-            margin: 0 auto 15px auto;
+            margin: 0 auto 18px auto;
             position: relative;
-            box-shadow: 0 8px 20px rgba(26, 42, 74, 0.15);
+            box-shadow: 0 10px 25px rgba(26, 42, 74, 0.2);
         }
 
         .custom-logo::before {
@@ -73,96 +75,114 @@
             top: 50%;
             left: 53%;
             transform: translate(-50%, -50%);
-            font-size: 28px;
+            font-size: 24px;
             color: #1a2a4a;
             background: #fff;
             padding: 10px;
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            width: 46px;
+            height: 46px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.2);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.15), 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .brand-name {
-            font-size: 42px;
+            font-size: 44px;
             font-weight: 700;
             color: #112240;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
+            line-height: 1.2;
         }
 
         .brand-subtitle {
-            font-size: 20px;
+            font-size: 18px;
             color: #387067;
-            font-weight: 500;
-            margin-top: 5px;
+            font-weight: 600;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
         }
 
+        /* Sosyal Medya Izgarası 4'lü Buton İçin Güncellendi */
         .social-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
             width: 100%;
-            max-width: 850px;
+            max-width: 950px;
             margin-bottom: 30px;
             z-index: 2;
         }
 
         .social-box {
             border-radius: 24px;
-            padding: 35px 20px;
+            padding: 30px 15px;
             text-align: center;
             text-decoration: none;
             color: white;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .social-box:hover {
-            transform: translateY(-10px) scale(1.03);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.18);
         }
 
         .icon-circle {
-            width: 65px;
-            height: 65px;
+            width: 60px;
+            height: 60px;
             background: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 15px;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .social-box:hover .icon-circle {
+            transform: scale(1.08);
         }
 
         .icon-circle i {
-            font-size: 32px;
+            font-size: 28px;
         }
 
         .social-box h3 {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
+            text-decoration: none;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .social-box:hover h3 {
             text-decoration: underline;
-            margin-bottom: 8px;
         }
 
         .sub-icon {
-            font-size: 18px;
-            opacity: 0.95;
+            font-size: 16px;
+            opacity: 0.9;
             animation: pulse 2s infinite ease-in-out;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.8; }
+            0%, 100% { transform: scale(1); opacity: 0.7; }
             50% { transform: scale(1.15); opacity: 1; }
         }
+
+        /* Sosyal Medya Renk Geçişleri */
+        .facebook-box { background: linear-gradient(135deg, #1877f2 0%, #0052c2 100%); }
+        .facebook-box .icon-circle i { color: #1877f2; }
 
         .tiktok-box { background: linear-gradient(45deg, #ff0050 0%, #00f2ea 100%); }
         .tiktok-box .icon-circle i { color: #000000; }
@@ -174,35 +194,35 @@
         .youtube-box .icon-circle i { color: #ff0000; }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 32px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 28px;
             padding: 40px;
-            max-width: 850px;
+            max-width: 950px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.04), inset 0 0 20px rgba(255,255,255,0.3);
             z-index: 2;
             margin-bottom: 25px;
         }
 
         .glass-card h2 {
-            font-size: 28px;
+            font-size: 26px;
             color: #112240;
             margin-bottom: 15px;
             font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
         .glass-card p {
-            font-size: 16px;
-            color: #223354;
+            font-size: 15px;
+            color: #2c3e50;
             line-height: 1.8;
             font-weight: 500;
         }
 
-        /* Yenilenen İhbar Buton Grubu */
         .ihbar-buttons {
             display: flex;
             justify-content: center;
@@ -214,37 +234,46 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 32px;
+            padding: 15px 35px;
             border-radius: 50px;
             text-decoration: none;
             color: white;
             font-weight: 600;
             font-size: 16px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .ihbar-btn:hover {
             transform: translateY(-4px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            box-shadow: 0 14px 28px rgba(0,0,0,0.15);
+            filter: brightness(1.05);
         }
 
         .btn-whatsapp { background: linear-gradient(135deg, #25D366 0%, #075E54 100%); }
         .btn-telegram { background: linear-gradient(135deg, #229ED9 0%, #0088cc 100%); }
 
+        /* Mobil Uyumluluk Ayarları */
+        @media (max-width: 992px) {
+            .social-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        }
+
         @media (max-width: 768px) {
-            .social-grid { grid-template-columns: 1fr; gap: 20px; }
-            .brand-name { font-size: 32px; }
-            .glass-card { padding: 25px; }
-            .ihbar-buttons { flex-direction: column; gap: 12px; }
-            .ihbar-btn { justify-content: center; }
+            .brand-name { font-size: 36px; }
+            .glass-card { padding: 30px 20px; }
+            .ihbar-buttons { flex-direction: column; gap: 14px; }
+            .ihbar-btn { justify-content: center; width: 100%; }
+        }
+
+        @media (max-width: 480px) {
+            .social-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
     <div class="decor-star" style="top: 15%; left: 10%;"><i class="fa-solid fa-star"></i></div>
-    <div class="decor-star" style="top: 25%; right: 8%; color: #9fe2ff;"><i class="fa-solid fa-sparkles"></i></div>
+    <div class="decor-star" style="top: 25%; right: 8%; color: #9fe2ff;"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
     <div class="decor-star" style="bottom: 20%; left: 5%; color: #ffe69f;"><i class="fa-solid fa-star"></i></div>
 
     <div class="header-container">
@@ -259,6 +288,14 @@
 
     <div class="social-grid">
         
+        <a href="https://www.facebook.com/share/1B8aPP2q3A/?mibextid=wwXIfr" target="_blank" class="social-box facebook-box">
+            <div class="icon-circle">
+                <i class="fa-brands fa-facebook-f"></i>
+            </div>
+            <h3>Facebook</h3>
+            <i class="fa-solid fa-share-nodes sub-icon"></i>
+        </a>
+
         <a href="https://www.tiktok.com/@icerikkhane" target="_blank" class="social-box tiktok-box">
             <div class="icon-circle">
                 <i class="fa-brands fa-tiktok"></i>
@@ -309,3 +346,5 @@
 
 </body>
 </html>
+
+```
