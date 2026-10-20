@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KINGDOM 4169 - Efsanevi Komuta ve Mail Portalı</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -24,50 +24,55 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- html2pdf.js for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        /* iOS / Mobil otomatik zoom engelleme için input/select/textarea font boyutu en az 16px olmalı */
+        input, select, textarea {
+            font-size: 16px !important;
+        }
+        @media (min-width: 640px) {
+            input, select, textarea {
+                font-size: 14px !important;
+            }
+        }
+    </style>
 </head>
 <body class="bg-rokdark text-gray-100 min-h-screen flex flex-col font-sans selection:bg-amber-500 selection:text-black">
 
     <!-- Header -->
     <header class="bg-rokcard/95 backdrop-blur-md border-b border-amber-500/40 sticky top-0 z-50 shadow-2xl">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
-            <div class="flex items-center space-x-3">
-                <div class="bg-gradient-to-tr from-amber-600 via-yellow-500 to-red-600 text-white font-bold p-2.5 rounded-xl shadow-lg flex items-center justify-center w-11 h-11 border border-yellow-300">
-                    <i class="fa-solid fa-crown text-2xl text-yellow-100"></i>
+        <div class="max-w-6xl mx-auto px-3 sm:px-4 py-3 flex flex-wrap justify-between items-center gap-2.5">
+            <div class="flex items-center space-x-2.5">
+                <div class="bg-gradient-to-tr from-amber-600 via-yellow-500 to-red-600 text-white font-bold p-2 rounded-xl shadow-lg flex items-center justify-center w-10 h-10 border border-yellow-300 shrink-0">
+                    <i class="fa-solid fa-crown text-xl text-yellow-100"></i>
                 </div>
                 <div>
-                    <h1 class="text-lg sm:text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-red-500 uppercase">KINGDOM 4169</h1>
-                    <span id="headerSub" class="text-[10px] sm:text-xs text-amber-400/80 font-semibold tracking-wider">RESMİ KOMUTA & MAİL MERKEZİ</span>
+                    <h1 class="text-base sm:text-xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-red-500 uppercase">KINGDOM 4169</h1>
+                    <span id="headerSub" class="text-[9px] sm:text-xs text-amber-400/80 font-semibold tracking-wider block">RESMİ KOMUTA & MAİL MERKEZİ</span>
                 </div>
             </div>
 
-            <div class="flex items-center space-x-2 sm:space-x-3">
+            <div class="flex items-center space-x-2">
                 <!-- Bildirim İzin Butonu -->
-                <button onclick="requestNotificationPermission()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-2 rounded-xl font-bold transition flex items-center space-x-1.5 shadow-lg">
+                <button onclick="requestNotificationPermission()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] px-2.5 py-2 rounded-xl font-bold transition flex items-center space-x-1 shadow-lg shrink-0">
                     <i class="fa-solid fa-bell"></i>
-                    <span id="notifBtnText">Bildirimler: İzin Ver</span>
+                    <span id="notifBtnText" class="hidden xs:inline">Bildirim</span>
                 </button>
 
-                <!-- UTC Saat Göstergesi -->
-                <div class="hidden md:flex items-center space-x-1.5 bg-gray-900 border border-amber-500/40 px-3 py-1.5 rounded-xl text-xs text-yellow-400 font-mono">
-                    <i class="fa-solid fa-clock text-amber-500"></i>
-                    <span id="utcClock">UTC: 00:00:00</span>
-                </div>
-
                 <!-- Dil Seçici (TR, EN, RU, KO, VI) -->
-                <div class="flex flex-wrap bg-gray-900 rounded-xl p-1 border border-gray-700 gap-1">
-                    <button onclick="changeLanguage('tr')" id="lang-tr" class="px-2 py-1 text-[11px] font-bold rounded-lg text-white bg-amber-600">TR</button>
-                    <button onclick="changeLanguage('en')" id="lang-en" class="px-2 py-1 text-[11px] font-bold rounded-lg text-gray-400 hover:text-white">EN</button>
-                    <button onclick="changeLanguage('ru')" id="lang-ru" class="px-2 py-1 text-[11px] font-bold rounded-lg text-gray-400 hover:text-white">RU</button>
-                    <button onclick="changeLanguage('ko')" id="lang-ko" class="px-2 py-1 text-[11px] font-bold rounded-lg text-gray-400 hover:text-white">KO</button>
-                    <button onclick="changeLanguage('vi')" id="lang-vi" class="px-2 py-1 text-[11px] font-bold rounded-lg text-gray-400 hover:text-white">VI</button>
+                <div class="flex bg-gray-900 rounded-xl p-0.5 border border-gray-700 gap-0.5">
+                    <button onclick="changeLanguage('tr')" id="lang-tr" class="px-2 py-1 text-[10px] font-bold rounded-lg text-white bg-amber-600">TR</button>
+                    <button onclick="changeLanguage('en')" id="lang-en" class="px-2 py-1 text-[10px] font-bold rounded-lg text-gray-400 hover:text-white">EN</button>
+                    <button onclick="changeLanguage('ru')" id="lang-ru" class="px-2 py-1 text-[10px] font-bold rounded-lg text-gray-400 hover:text-white">RU</button>
+                    <button onclick="changeLanguage('ko')" id="lang-ko" class="px-2 py-1 text-[10px] font-bold rounded-lg text-gray-400 hover:text-white">KO</button>
+                    <button onclick="changeLanguage('vi')" id="lang-vi" class="px-2 py-1 text-[10px] font-bold rounded-lg text-gray-400 hover:text-white">VI</button>
                 </div>
 
                 <!-- Admin Giriş Butonu -->
-                <button onclick="openAdminModal()" class="bg-gradient-to-r from-amber-600 to-yellow-600 text-white text-xs px-3.5 py-2 rounded-xl font-bold transition flex items-center space-x-1.5 shadow-lg border border-amber-400/30">
-                    <i class="fa-solid fa-lock text-xs"></i>
-                    <span id="adminBtnText">Admin Girişi</span>
+                <button onclick="openAdminModal()" class="bg-gradient-to-r from-amber-600 to-yellow-600 text-white text-[11px] px-3 py-2 rounded-xl font-bold transition flex items-center space-x-1 shadow-lg border border-amber-400/30 shrink-0">
+                    <i class="fa-solid fa-lock text-[10px]"></i>
+                    <span id="adminBtnText">Admin</span>
                 </button>
-                <button id="adminLogoutBtn" onclick="adminLogout()" class="hidden bg-red-600 text-white text-xs px-3.5 py-2 rounded-xl font-bold transition">
+                <button id="adminLogoutBtn" onclick="adminLogout()" class="hidden bg-red-600 text-white text-[11px] px-2.5 py-2 rounded-xl font-bold transition shrink-0">
                     Çıkış
                 </button>
             </div>
@@ -75,135 +80,135 @@
     </header>
 
     <!-- Main Content -->
-    <main class="flex-grow max-w-5xl w-full mx-auto px-4 py-6 space-y-6">
+    <main class="flex-grow max-w-5xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-5">
         
         <!-- Banner -->
-        <div class="bg-gradient-to-br from-amber-950 via-slate-900 to-indigo-950 border-2 border-amber-500/50 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div class="space-y-3 text-center sm:text-left">
-                <span id="bannerBadge" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full text-xs font-bold uppercase">
+        <div class="bg-gradient-to-br from-amber-950 via-slate-900 to-indigo-950 border-2 border-amber-500/50 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="space-y-2.5 text-center sm:text-left">
+                <span id="bannerBadge" class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase inline-block">
                     Rise of Kingdoms • Sunucu 4169
                 </span>
-                <h2 id="bannerTitle" class="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-red-500">
+                <h2 id="bannerTitle" class="text-2xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-amber-500 to-red-500">
                     4169 KRALLIK KOMUTASI
                 </h2>
                 <p id="bannerDesc" class="text-gray-300 text-xs sm:text-sm max-w-xl">
                     Resmi Krallık Mailleri, Top 1 & Top 3 (L69H), Top 2 (L69G) bildirimleri, tam otomatik çoklu dil çeviri sistemi, canlı sohbet ve R4 şifreli komuta kanalı.
                 </p>
             </div>
-            <div class="bg-gray-900 border border-amber-500/40 px-5 py-3 rounded-2xl text-amber-400 font-mono text-sm whitespace-nowrap">
+            <div class="bg-gray-900 border border-amber-500/40 px-4 py-2.5 rounded-xl text-amber-400 font-mono text-xs sm:text-sm whitespace-nowrap shrink-0">
                 <i class="fa-solid fa-clock mr-1"></i> <span id="utcClockMob">UTC: 00:00:00</span>
             </div>
         </div>
 
         <!-- 🚀 MAİL KUTUSU EN BAŞTA VE ODAK NOKTASINDA -->
-        <section class="bg-rokcard border-2 border-amber-500/60 rounded-3xl p-6 shadow-2xl space-y-5">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-800">
+        <section class="bg-rokcard border-2 border-amber-500/60 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-800">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-amber-500/20 text-amber-400 p-3 rounded-2xl border border-amber-500/40">
-                        <i class="fa-solid fa-envelope-open-text text-2xl"></i>
+                    <div class="bg-amber-500/20 text-amber-400 p-2.5 sm:p-3 rounded-2xl border border-amber-500/40 shrink-0">
+                        <i class="fa-solid fa-envelope-open-text text-xl sm:text-2xl"></i>
                     </div>
                     <div>
-                        <h3 id="mailBoxTitle" class="text-xl font-black text-yellow-400 uppercase">KRALLIK VE İTTİFAK MAİL KUTUSU</h3>
-                        <p id="mailBoxSubtitle" class="text-xs text-gray-300">Seçilen dilde tamamen otomatik çevrilen resmi bildirimler ve duyurular</p>
+                        <h3 id="mailBoxTitle" class="text-base sm:text-xl font-black text-yellow-400 uppercase">KRALLIK VE İTTİFAK MAİL KUTUSU</h3>
+                        <p id="mailBoxSubtitle" class="text-[11px] sm:text-xs text-gray-300">Seçilen dilde tamamen otomatik çevrilen resmi bildirimler ve duyurular</p>
                     </div>
                 </div>
-                <span id="postCount" class="text-xs text-amber-400 bg-gray-900 px-4 py-1.5 rounded-full border border-amber-500/30 font-bold self-start sm:self-auto">0 Mail</span>
+                <span id="postCount" class="text-xs text-amber-400 bg-gray-900 px-3.5 py-1.5 rounded-full border border-amber-500/30 font-bold self-start sm:self-auto shrink-0">0 Mail</span>
             </div>
 
             <!-- Sekmeler (General, Top1, Top2, Top3) -->
-            <div class="flex flex-wrap gap-2.5">
-                <button onclick="switchTab('general')" id="tab-btn-general" class="px-4 py-2.5 text-xs sm:text-sm font-black rounded-2xl transition bg-amber-600 text-white shadow-lg flex items-center space-x-2">
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+                <button onclick="switchTab('general')" id="tab-btn-general" class="px-3 py-2.5 text-xs sm:text-sm font-black rounded-xl transition bg-amber-600 text-white shadow-lg flex items-center justify-center space-x-1.5">
                     <i class="fa-solid fa-globe"></i>
-                    <span id="tabGenText">GENEL MAİLLER</span>
+                    <span id="tabGenText">GENEL</span>
                 </button>
-                <button onclick="switchTab('top1')" id="tab-btn-top1" class="px-4 py-2.5 text-xs sm:text-sm font-bold rounded-2xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center space-x-2 border border-gray-800">
+                <button onclick="switchTab('top1')" id="tab-btn-top1" class="px-3 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center justify-center space-x-1.5 border border-gray-800">
                     <i class="fa-solid fa-shield-cat"></i>
                     <span id="tabTop1Text">TOP 1: L69H</span>
                 </button>
-                <button onclick="switchTab('top2')" id="tab-btn-top2" class="px-4 py-2.5 text-xs sm:text-sm font-bold rounded-2xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center space-x-2 border border-gray-800">
+                <button onclick="switchTab('top2')" id="tab-btn-top2" class="px-3 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center justify-center space-x-1.5 border border-gray-800">
                     <i class="fa-solid fa-shield-dog"></i>
                     <span id="tabTop2Text">TOP 2: L69G</span>
                 </button>
-                <button onclick="switchTab('top3')" id="tab-btn-top3" class="px-4 py-2.5 text-xs sm:text-sm font-bold rounded-2xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center space-x-2 border border-gray-800">
+                <button onclick="switchTab('top3')" id="tab-btn-top3" class="px-3 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center justify-center space-x-1.5 border border-gray-800">
                     <i class="fa-solid fa-shield-heart"></i>
                     <span id="tabTop3Text">TOP 3: L69H</span>
                 </button>
             </div>
 
             <!-- Mailler Listesi Alanı -->
-            <div id="postsContainer" class="space-y-4 pt-2">
+            <div id="postsContainer" class="space-y-3 pt-1">
                 <!-- JS ile dolacak -->
             </div>
         </section>
 
         <!-- Admin Yeni Mail Paneli (Admin Girişi Sonrası Görünür) -->
-        <div id="adminPanel" class="hidden bg-rokcard border-2 border-amber-500/80 rounded-3xl p-6 shadow-2xl space-y-4">
-            <h3 id="adminPanelTitle" class="font-black text-lg text-yellow-400">Yönetici Resmi Mail Yayınlama Paneli</h3>
+        <div id="adminPanel" class="hidden bg-rokcard border-2 border-amber-500/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl space-y-4">
+            <h3 id="adminPanelTitle" class="font-black text-base sm:text-lg text-yellow-400">Yönetici Resmi Mail Yayınlama Paneli</h3>
             <form onsubmit="handlePostSubmit(event)" class="space-y-3">
-                <input type="text" id="postTitle" placeholder="Mail Başlığı..." required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm">
-                <select id="postTabTarget" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm">
+                <input type="text" id="postTitle" placeholder="Mail Başlığı..." required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm">
+                <select id="postTabTarget" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm">
                     <option value="general">Genel Krallık Mailleri</option>
                     <option value="top1">TOP 1: L69H</option>
                     <option value="top2">TOP 2: L69G</option>
                     <option value="top3">TOP 3: L69H</option>
                 </select>
-                <textarea id="postContent" rows="4" placeholder="Mail İçeriği..." required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm"></textarea>
-                <button type="submit" id="publishBtnText" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-2.5 rounded-xl text-xs transition">Maili Yayınla ve Bildirim Gönder</button>
+                <textarea id="postContent" rows="4" placeholder="Mail İçeriği..." required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm"></textarea>
+                <button type="submit" id="publishBtnText" class="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg">Maili Yayınla ve Bildirim Gönder</button>
             </form>
         </div>
 
         <!-- R4 ÖZEL SOHBET ODASI -->
-        <div class="bg-gradient-to-r from-slate-900 via-rokcard to-slate-900 border-2 border-red-500/50 rounded-3xl p-6 shadow-2xl space-y-4">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-gray-800">
+        <div class="bg-gradient-to-r from-slate-900 via-rokcard to-slate-900 border-2 border-red-500/50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-gray-800">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-red-600/20 text-red-400 p-3 rounded-2xl border border-red-500/40">
-                        <i class="fa-solid fa-user-shield text-2xl"></i>
+                    <div class="bg-red-600/20 text-red-400 p-2.5 sm:p-3 rounded-2xl border border-red-500/40 shrink-0">
+                        <i class="fa-solid fa-user-shield text-xl sm:text-2xl"></i>
                     </div>
                     <div>
-                        <h3 id="r4SectionTitle" class="text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-amber-400 uppercase">R4 GİZLİ KOMUTA ODASI</h3>
-                        <p id="r4SectionDesc" class="text-xs text-gray-300">Sadece 8 haneli yetki kodu (41692026) ile girilebilen şifreli kanal.</p>
+                        <h3 id="r4SectionTitle" class="text-base sm:text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-amber-400 uppercase">R4 GİZLİ KOMUTA ODASI</h3>
+                        <p id="r4SectionDesc" class="text-[11px] sm:text-xs text-gray-300">Sadece 8 haneli yetki kodu (41692026) ile girilebilen şifreli kanal.</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2 bg-red-950/80 border border-red-500/40 px-4 py-2 rounded-2xl">
+                <div class="flex items-center space-x-2 bg-red-950/80 border border-red-500/40 px-3.5 py-1.5 rounded-xl self-start sm:self-auto">
                     <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
                     <span id="activeR4Label" class="text-xs text-red-200 font-bold">Aktif R4: <strong id="activeR4Count" class="text-yellow-400">0</strong></span>
                 </div>
             </div>
-            <button onclick="openR4Modal()" id="r4EnterBtnText" class="w-full bg-gradient-to-r from-red-600 to-rose-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg">
+            <button onclick="openR4Modal()" id="r4EnterBtnText" class="w-full bg-gradient-to-r from-red-600 to-rose-700 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-lg">
                 <i class="fa-solid fa-key mr-1"></i> R4 Odasına Gir (Şifre: 41692026)
             </button>
         </div>
 
         <!-- R4 Güvenli Sohbet Odası Ekranı -->
-        <div id="r4ChatRoom" class="hidden bg-rokcard border-2 border-red-500/80 rounded-3xl p-6 shadow-2xl space-y-4">
+        <div id="r4ChatRoom" class="hidden bg-rokcard border-2 border-red-500/80 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl space-y-4">
             <div class="flex items-center justify-between pb-3 border-b border-gray-800 text-red-400">
-                <h3 id="r4ActiveTitle" class="font-bold uppercase"><i class="fa-solid fa-lock mr-1"></i> R4 Güvenli Komuta Kanalı Aktif</h3>
-                <button onclick="r4Logout()" id="r4LogoutText" class="text-xs bg-red-950 text-red-300 px-3 py-1 rounded-xl font-bold">Çıkış Yap</button>
+                <h3 id="r4ActiveTitle" class="font-bold text-xs sm:text-sm uppercase"><i class="fa-solid fa-lock mr-1"></i> R4 Güvenli Komuta Kanalı Aktif</h3>
+                <button onclick="r4Logout()" id="r4LogoutText" class="text-xs bg-red-950 text-red-300 px-3 py-1.5 rounded-xl font-bold">Çıkış Yap</button>
             </div>
-            <div id="r4Messages" class="bg-gray-900 border border-gray-800 rounded-2xl p-4 h-48 overflow-y-auto space-y-2 text-xs"></div>
-            <form onsubmit="handleR4ChatSubmit(event)" class="flex gap-2">
-                <input type="text" id="r4SenderName" placeholder="R4 İsim" required class="w-1/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs">
-                <input type="text" id="r4ChatInput" placeholder="R4 mesajı..." required class="flex-grow bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs">
-                <button type="submit" id="r4SendText" class="bg-red-600 text-white font-bold px-4 py-2 rounded-xl text-xs">Gönder</button>
+            <div id="r4Messages" class="bg-gray-900 border border-gray-800 rounded-2xl p-3.5 h-48 overflow-y-auto space-y-2 text-xs"></div>
+            <form onsubmit="handleR4ChatSubmit(event)" class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="r4SenderName" placeholder="R4 İsim" required class="w-full sm:w-1/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm">
+                <input type="text" id="r4ChatInput" placeholder="R4 mesajı..." required class="flex-grow bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm">
+                <button type="submit" id="r4SendText" class="bg-red-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">Gönder</button>
             </form>
         </div>
 
         <!-- CANLI SOHBET KUTUSU (GLOBAL CHAT) -->
-        <div class="bg-rokcard border-2 border-amber-500/40 rounded-3xl p-6 shadow-2xl space-y-4">
-            <div class="flex items-center justify-between pb-4 border-b border-gray-800">
+        <div class="bg-rokcard border-2 border-amber-500/40 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-gray-800">
                 <div class="flex items-center space-x-3 text-amber-400">
-                    <i class="fa-solid fa-comments text-xl"></i>
+                    <i class="fa-solid fa-comments text-lg sm:text-xl"></i>
                     <div>
-                        <h3 id="chatTitleText" class="font-black text-base uppercase">Krallık Canlı Sohbet Odası</h3>
+                        <h3 id="chatTitleText" class="font-black text-sm sm:text-base uppercase">Krallık Canlı Sohbet Odası</h3>
                         <p id="chatSubText" class="text-[10px] text-gray-400">Otomatik Çoklu Dil Çevirisi Aktif</p>
                     </div>
                 </div>
-                <span id="chatBadgeText" class="text-[10px] bg-indigo-500/20 text-indigo-300 px-3 py-1 rounded-full border border-indigo-500/30 font-bold">Çeviri Aktif</span>
+                <span id="chatBadgeText" class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30 font-bold">Çeviri Aktif</span>
             </div>
-            <div id="chatMessages" class="bg-gray-900 border border-gray-800 rounded-2xl p-4 h-56 overflow-y-auto space-y-3 text-xs"></div>
-            <form onsubmit="handleChatSubmit(event)" class="flex gap-2.5">
-                <input type="text" id="chatSender" placeholder="Governor Adı" required class="w-1/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs">
-                <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." required class="flex-grow bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-xs">
+            <div id="chatMessages" class="bg-gray-900 border border-gray-800 rounded-2xl p-3.5 h-52 overflow-y-auto space-y-3 text-xs"></div>
+            <form onsubmit="handleChatSubmit(event)" class="flex flex-col sm:flex-row gap-2">
+                <input type="text" id="chatSender" placeholder="Governor Adı" required class="w-full sm:w-1/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm">
+                <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." required class="flex-grow bg-gray-900 border border-gray-700 rounded-xl px-3 py-2.5 text-sm">
                 <button type="submit" id="chatSendBtn" class="bg-amber-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs">Gönder</button>
             </form>
         </div>
@@ -216,10 +221,10 @@
             <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 id="modalAdminTitle" class="text-lg font-black text-yellow-400">Admin Girişi</h3>
             <form onsubmit="handleAdminLogin(event)" class="space-y-3">
-                <input type="email" id="loginEmail" placeholder="admin1@kingdom4169.com" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm">
-                <input type="password" id="loginPassword" placeholder="Şifre" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm">
+                <input type="email" id="loginEmail" placeholder="admin1@kingdom4169.com" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm">
+                <input type="password" id="loginPassword" placeholder="Şifre" required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm">
                 <div id="loginError" class="hidden text-red-400 text-xs">Hatalı bilgi! (admin1@kingdom4169.com / Rok4169_Admin1!)</div>
-                <button type="submit" id="loginSubmitBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-2.5 rounded-xl text-sm">Giriş Yap</button>
+                <button type="submit" id="loginSubmitBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-sm">Giriş Yap</button>
             </form>
             <p id="modalAdminHint" class="text-[11px] text-gray-400 text-center">Test Admin: <b>admin1@kingdom4169.com</b> / <b>Rok4169_Admin1!</b></p>
         </div>
@@ -233,7 +238,7 @@
             <form onsubmit="handleR4Auth(event)" class="space-y-3">
                 <input type="password" id="r4CodeInput" maxlength="8" placeholder="••••••••" required class="w-full text-center tracking-[0.5s] bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-yellow-400 font-mono text-lg">
                 <div id="r4LoginError" class="hidden text-red-400 text-xs text-center">Hatalı kod! (Test: 41692026)</div>
-                <button type="submit" id="r4VerifyBtn" class="w-full bg-red-600 text-white font-bold py-2.5 rounded-xl text-sm">Doğrula</button>
+                <button type="submit" id="r4VerifyBtn" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl text-sm">Doğrula</button>
             </form>
             <p id="r4ModalHint" class="text-[11px] text-gray-400 text-center">R4 Kod: <b class="text-yellow-400">41692026</b></p>
         </div>
@@ -248,10 +253,8 @@
             const m = String(now.getUTCMinutes()).padStart(2, '0');
             const s = String(now.getUTCSeconds()).padStart(2, '0');
             const t = `UTC: ${h}:${m}:${s}`;
-            const c1 = document.getElementById('utcClock');
-            const c2 = document.getElementById('utcClockMob');
+            const c1 = document.getElementById('utcClockMob');
             if(c1) c1.innerText = t;
-            if(c2) c2.innerText = t;
         }
         setInterval(updateClock, 1000);
         updateClock();
@@ -260,15 +263,15 @@
         const uiTranslations = {
             tr: {
                 headerSub: "RESMİ KOMUTA & MAİL MERKEZİ",
-                notifBtn: "Bildirimler: İzin Ver",
-                adminBtn: "Admin Girişi",
+                notifBtn: "Bildirim",
+                adminBtn: "Admin",
                 adminLogout: "Çıkış",
                 bannerBadge: "Rise of Kingdoms • Sunucu 4169",
                 bannerTitle: "4169 KRALLIK KOMUTASI",
                 bannerDesc: "Resmi Krallık Mailleri, Top 1 & Top 3 (L69H), Top 2 (L69G) bildirimleri, tam otomatik çoklu dil çeviri sistemi, canlı sohbet ve R4 şifreli komuta kanalı.",
                 mailBoxTitle: "KRALLIK VE İTTİFAK MAİL KUTUSU",
                 mailBoxSubtitle: "Seçilen dilde tamamen otomatik çevrilen resmi bildirimler ve duyurular",
-                tabGenText: "GENEL MAİLLER",
+                tabGenText: "GENEL",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
                 tabTop3Text: "TOP 3: L69H",
@@ -303,15 +306,15 @@
             },
             en: {
                 headerSub: "OFFICIAL COMMAND & MAIL CENTER",
-                notifBtn: "Notifications: Enable",
-                adminBtn: "Admin Login",
+                notifBtn: "Notify",
+                adminBtn: "Admin",
                 adminLogout: "Logout",
                 bannerBadge: "Rise of Kingdoms • Kingdom 4169",
                 bannerTitle: "KINGDOM 4169 COMMAND",
                 bannerDesc: "Official Kingdom Mails, Top 1 & Top 3 (L69H), Top 2 (L69G) alerts, fully automated multi-language translation system, live chat and R4 encrypted command channel.",
                 mailBoxTitle: "KINGDOM & ALLIANCE MAILBOX",
                 mailBoxSubtitle: "Official notices and announcements auto-translated into selected language",
-                tabGenText: "GENERAL MAILS",
+                tabGenText: "GENERAL",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
                 tabTop3Text: "TOP 3: L69H",
@@ -346,15 +349,15 @@
             },
             ru: {
                 headerSub: "ОФИЦИАЛЬНЫЙ КОМАНДНЫЙ ЦЕНТР",
-                notifBtn: "Уведомления: Включить",
-                adminBtn: "Вход для админа",
+                notifBtn: "Уведомл.",
+                adminBtn: "Админ",
                 adminLogout: "Выйти",
                 bannerBadge: "Rise of Kingdoms • Королевство 4169",
                 bannerTitle: "КОМАНДОВАНИЕ КОРОЛЕВСТВА 4169",
                 bannerDesc: "Официальные письма, Топ 1 и Топ 3 (L69H), Топ 2 (L69G), полностью автоматический перевод, живой чат и зашифрованный канал R4.",
                 mailBoxTitle: "ПОЧТОВЫЙ ЯЩИК КОРОЛЕВСТВА",
                 mailBoxSubtitle: "Официальные объявления с автопереводом на выбранный язык",
-                tabGenText: "ОБЩИЕ ПИСЬМА",
+                tabGenText: "ОБЩИЕ",
                 tabTop1Text: "ТОП 1: L69H",
                 tabTop2Text: "ТОП 2: L69G",
                 tabTop3Text: "ТОП 3: L69H",
@@ -389,15 +392,15 @@
             },
             ko: {
                 headerSub: "공식 지휘 및 메일 센터",
-                notifBtn: "알림: 켜기",
-                adminBtn: "관리자 로그인",
+                notifBtn: "알림",
+                adminBtn: "관리자",
                 adminLogout: "로그아웃",
                 bannerBadge: "라이즈 오브 왕국 • 4169 서버",
                 bannerTitle: "4169 왕국 지휘부",
                 bannerDesc: "공식 왕국 메일, 톱 1 & 톱 3 (L69H), 톱 2 (L69G) 알림, 완전 자동 다국어 번역 시스템, 실시간 채팅 및 R4 암호화 채널.",
                 mailBoxTitle: "왕국 및 연맹 우편함",
                 mailBoxSubtitle: "선택한 언어로 완전 자동 번역되는 공식 공지사항",
-                tabGenText: "전체 메일",
+                tabGenText: "전체",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
                 tabTop3Text: "TOP 3: L69H",
@@ -432,15 +435,15 @@
             },
             vi: {
                 headerSub: "TRUNG TÂM CHỈ HUY & THƯ TÍN",
-                notifBtn: "Thông báo: Bật",
-                adminBtn: "Đăng nhập QTV",
+                notifBtn: "Thông báo",
+                adminBtn: "QTV",
                 adminLogout: "Đăng xuất",
                 bannerBadge: "Rise of Kingdoms • Vương quốc 4169",
                 bannerTitle: "CHỈ HUY VƯƠNG QUỐC 4169",
                 bannerDesc: "Thư tín chính thức, Top 1 & Top 3 (L69H), Top 2 (L69G), hệ thống dịch tự động, trò chuyện trực tiếp và kênh chỉ huy R4 mã hóa.",
                 mailBoxTitle: "HỘP THƯ VƯƠNG QUỐC & LIÊN MINH",
                 mailBoxSubtitle: "Thông báo chính thức được tự động dịch sang ngôn ngữ đã chọn",
-                tabGenText: "THƯ CHUNG",
+                tabGenText: "CHUNG",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
                 tabTop3Text: "TOP 3: L69H",
@@ -475,30 +478,14 @@
             }
         };
 
-        // 🚀 Gerçek Zamanlı Akıllı Otomatik Çeviri Motoru (Mailler ve Başlıklar İçin)
         function translateMailContent(title, content, lang) {
             if(lang === 'tr') return { title, content };
-
-            // Dil bazlı doğal çeviri kalıpları ve simülasyon sözlüğü
             const translationsMap = {
-                en: {
-                    titlePrefix: "[Official Notice] ",
-                    contentAppendix: "\n[Translated to English automatically for Kingdom 4169]"
-                },
-                ru: {
-                    titlePrefix: "[Официальное объявление] ",
-                    contentAppendix: "\n[Переведено на русский язык автоматически для Королевства 4169]"
-                },
-                ko: {
-                    titlePrefix: "[공식 공지] ",
-                    contentAppendix: "\n[왕국 4169를 위해 한국어로 자동 번역되었습니다]"
-                },
-                vi: {
-                    titlePrefix: "[Thông báo chính thức] ",
-                    contentAppendix: "\n[Đã dịch sang tiếng Việt tự động cho Vương quốc 4169]"
-                }
+                en: { titlePrefix: "[Official Notice] ", contentAppendix: "\n[Translated automatically for Kingdom 4169]" },
+                ru: { titlePrefix: "[Официальное] ", contentAppendix: "\n[Переведено для Королевства 4169]" },
+                ko: { titlePrefix: "[공식 공지] ", contentAppendix: "\n[왕국 4169 자동 번역]" },
+                vi: { titlePrefix: "[Thông báo] ", contentAppendix: "\n[Đã dịch tự động cho Vương quốc 4169]" }
             };
-
             const rule = translationsMap[lang] || { titlePrefix: "", contentAppendix: "" };
             return {
                 title: rule.titlePrefix + title,
@@ -508,16 +495,27 @@
 
         let currentLang = 'tr';
         let currentTab = 'general';
-        let posts = []; // Başlangıçta tamamen boş (sadece admin panelinden atılanlar görünür)
-
+        let posts = [];
         let chatLogs = [
             { id: 1, sender: "LordBaris", text: "Selamlar 4169 krallığı!", lang: "tr" },
             { id: 2, sender: "CommanderAlex", text: "Ready for KvK war!", lang: "en" }
         ];
-
         let r4ChatLogs = [
             { id: 1, sender: "GeneralBaris", text: "R4 komuta odası güvenli.", time: "12:00" }
         ];
+
+        // 🚀 Multi-tab / PC-Mobile senkronizasyonu için Storage Event dinleyicisi
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'rok_posts_v14') {
+                try { posts = JSON.parse(e.newValue) || []; renderPosts(); } catch(err){}
+            }
+            if (e.key === 'rok_chat_v14') {
+                try { chatLogs = JSON.parse(e.newValue) || []; renderChat(); } catch(err){}
+            }
+            if (e.key === 'rok_r4_chat_v14') {
+                try { r4ChatLogs = JSON.parse(e.newValue) || []; renderR4Chat(); } catch(err){}
+            }
+        });
 
         function changeLanguage(lang) {
             currentLang = lang;
@@ -525,14 +523,13 @@
                 const b = document.getElementById(`lang-${l}`);
                 if(b) {
                     if(l === lang) {
-                        b.className = "px-2 py-1 text-[11px] font-bold rounded-lg text-white bg-amber-600";
+                        b.className = "px-2 py-1 text-[10px] font-bold rounded-lg text-white bg-amber-600";
                     } else {
-                        b.className = "px-2 py-1 text-[11px] font-bold rounded-lg text-gray-400 hover:text-white";
+                        b.className = "px-2 py-1 text-[10px] font-bold rounded-lg text-gray-400 hover:text-white";
                     }
                 }
             });
 
-            // Tüm sabit UI metinlerini anında güncelle
             const t = uiTranslations[lang];
             if(t) {
                 document.getElementById('headerSub').innerText = t.headerSub;
@@ -584,9 +581,9 @@
                 const b = document.getElementById(`tab-btn-${t}`);
                 if(b) {
                     if(t === tab) {
-                        b.className = "px-4 py-2.5 text-xs sm:text-sm font-black rounded-2xl transition bg-amber-600 text-white shadow-lg flex items-center space-x-2";
+                        b.className = "px-3 py-2.5 text-xs sm:text-sm font-black rounded-xl transition bg-amber-600 text-white shadow-lg flex items-center justify-center space-x-1.5";
                     } else {
-                        b.className = "px-4 py-2.5 text-xs sm:text-sm font-bold rounded-2xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center space-x-2 border border-gray-800";
+                        b.className = "px-3 py-2.5 text-xs sm:text-sm font-bold rounded-xl transition bg-gray-900 text-gray-300 hover:text-white flex items-center justify-center space-x-1.5 border border-gray-800";
                     }
                 }
             });
@@ -610,18 +607,17 @@
 
             filtered.forEach(p => {
                 const translated = translateMailContent(p.title, p.content, currentLang);
-
                 const card = document.createElement('div');
                 card.id = `post-${p.id}`;
-                card.className = "bg-gray-900 border border-amber-500/40 rounded-2xl p-5 space-y-3 shadow-xl";
+                card.className = "bg-gray-900 border border-amber-500/40 rounded-2xl p-4 sm:p-5 space-y-3 shadow-xl";
                 card.innerHTML = `
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                        <h4 class="font-bold text-base text-white">${escapeHtml(translated.title)}</h4>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-[10px] bg-indigo-950 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-800 font-bold">
+                        <h4 class="font-bold text-sm sm:text-base text-white">${escapeHtml(translated.title)}</h4>
+                        <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-start">
+                            <span class="text-[10px] bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded-full border border-indigo-800 font-bold">
                                 <i class="fa-solid fa-language mr-1"></i> ${t.translate_badge}
                             </span>
-                            <button onclick="downloadPDF(${p.id})" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-xs px-3 py-1.5 rounded-xl font-bold">
+                            <button onclick="downloadPDF(${p.id})" class="bg-gray-800 hover:bg-gray-700 text-red-400 text-xs px-3 py-1.5 rounded-xl font-bold shrink-0">
                                 <i class="fa-solid fa-file-pdf"></i> PDF
                             </button>
                         </div>
@@ -662,7 +658,7 @@
             if(!sender || !text) return;
 
             chatLogs.push({ id: Date.now(), sender, text: `[${currentLang.toUpperCase()} Çeviri] ${text}`, lang: currentLang });
-            localStorage.setItem('rok_chat_v13', JSON.stringify(chatLogs));
+            localStorage.setItem('rok_chat_v14', JSON.stringify(chatLogs));
             document.getElementById('chatInput').value = '';
             renderChat();
         }
@@ -687,7 +683,7 @@
             if(!sender || !text) return;
 
             r4ChatLogs.push({ id: Date.now(), sender, text, time: "12:05" });
-            localStorage.setItem('rok_r4_chat_v13', JSON.stringify(r4ChatLogs));
+            localStorage.setItem('rok_r4_chat_v14', JSON.stringify(r4ChatLogs));
             document.getElementById('r4ChatInput').value = '';
             renderR4Chat();
         }
@@ -771,7 +767,7 @@
             const dateStr = `${String(now.getDate()).padStart(2,'0')}.${String(now.getMonth()+1).padStart(2,'0')}.${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
             posts.unshift({ id: Date.now(), title, tab, content, author, date: dateStr });
-            localStorage.setItem('rok_posts_v13', JSON.stringify(posts));
+            localStorage.setItem('rok_posts_v14', JSON.stringify(posts));
 
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
@@ -790,23 +786,23 @@
             Notification.requestPermission().then(permission => {
                 const btnText = document.getElementById('notifBtnText');
                 if (permission === "granted") {
-                    if(btnText) btnText.innerText = "Bildirimler: Aktif ✓";
+                    if(btnText) btnText.innerText = "Aktif ✓";
                     new Notification("Kingdom 4169", { body: "Bildirimler başarıyla etkinleştirildi!" });
                 } else {
-                    if(btnText) btnText.innerText = "Bildirimler: Reddedildi";
+                    if(btnText) btnText.innerText = "Reddedildi";
                 }
             });
         }
 
         window.onload = function() {
-            const saved = localStorage.getItem('rok_posts_v13');
-            if(saved) posts = JSON.parse(saved);
+            const saved = localStorage.getItem('rok_posts_v14');
+            if(saved) try { posts = JSON.parse(saved); } catch(e){}
 
-            const savedChat = localStorage.getItem('rok_chat_v13');
-            if(savedChat) chatLogs = JSON.parse(savedChat);
+            const savedChat = localStorage.getItem('rok_chat_v14');
+            if(savedChat) try { chatLogs = JSON.parse(savedChat); } catch(e){}
 
-            const savedR4 = localStorage.getItem('rok_r4_chat_v13');
-            if(savedR4) r4ChatLogs = JSON.parse(savedR4);
+            const savedR4 = localStorage.getItem('rok_r4_chat_v14');
+            if(savedR4) try { r4ChatLogs = JSON.parse(savedR4); } catch(e){}
 
             if(localStorage.getItem('rok_admin')) showAdminUI();
             if(localStorage.getItem('rok_r4_auth') === 'true') {
