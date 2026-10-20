@@ -39,12 +39,10 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  const title = typeof body?.title === "string"
-    ? body.title.trim()
-    : "";
-  const content = typeof body?.content === "string"
-    ? body.content.trim()
-    : "";
+  const title =
+    typeof body?.title === "string" ? body.title.trim() : "";
+  const content =
+    typeof body?.content === "string" ? body.content.trim() : "";
 
   if (!title || !content) {
     return res.status(400).json({
@@ -53,17 +51,20 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const escapeHtml = (s) => s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
+  const escapeHtml = (value) =>
+    value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
 
   try {
     const response = await fetch(
       `https://api.telegram.org/bot${token}/sendMessage`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           chat_id: chatId,
           text: `<b>${escapeHtml(title)}</b>\n\n${escapeHtml(content)}`,
@@ -76,16 +77,25 @@ module.exports = async function handler(req, res) {
     const result = await response.json();
 
     if (!response.ok || !result.ok) {
-      console.error("Telegram send failed:", result.description);
+      console.error(
+        "Telegram error:",
+        result.description || response.status
+      );
+
       return res.status(502).json({
         ok: false,
-        error: "Telegram could not send the message"
+        error: result.description || "Telegram send failed",
+        telegram_error_code: result.error_code || response.status
       });
     }
 
-    return res.status(200).json({ ok: true });
+    return res.status(200).json({
+      ok: true,
+      message: "Telegram notification sent"
+    });
   } catch (error) {
     console.error("Telegram request failed:", error.message);
+
     return res.status(502).json({
       ok: false,
       error: "Telegram request failed"
