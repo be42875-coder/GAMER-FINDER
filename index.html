@@ -28,6 +28,7 @@
     <!-- Firebase SDKs (Compat / v9) -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
 
     <style>
         input, select, textarea {
@@ -54,6 +55,20 @@
         .kh-muted{font-size:.72rem;color:#9ca3af;line-height:1.5}
         .kh-count{font-variant-numeric:tabular-nums;font-weight:900;color:#fcd34d;font-size:clamp(1rem,3vw,1.35rem)}
         @media(max-width:640px){.kh-card{padding:.85rem}.kh-btn{width:100%}.kh-community-grid{grid-template-columns:1fr}.kh-feature-grid{grid-template-columns:1fr}}
+
+        /* Separate professional community chat */
+        .kh-chat-shell{background:linear-gradient(145deg,#111827,#080d18);border:1px solid rgba(245,158,11,.42);border-radius:1.5rem;overflow:hidden;box-shadow:0 20px 55px rgba(0,0,0,.28)}
+        .kh-chat-header{background:linear-gradient(100deg,rgba(120,53,15,.35),rgba(17,24,39,.8),rgba(127,29,29,.22));border-bottom:1px solid rgba(245,158,11,.2)}
+        .kh-chat-log{height: min(54vh, 520px);min-height:300px;overflow-y:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at top,rgba(30,41,59,.32),rgba(3,7,18,.72))}
+        .kh-chat-bubble{max-width:92%;border:1px solid rgba(148,163,184,.17);background:rgba(31,41,55,.78);border-radius:1rem;padding:.75rem .9rem;overflow-wrap:anywhere}
+        .kh-chat-bubble.own{border-color:rgba(245,158,11,.28);background:rgba(120,53,15,.2)}
+        .kh-chat-input{width:100%;background:#030712;border:1px solid #374151;border-radius:.85rem;padding:.8rem;color:#f9fafb;outline:none}
+        .kh-chat-input:focus{border-color:#f59e0b;box-shadow:0 0 0 2px rgba(245,158,11,.12)}
+        .kh-chat-action{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border-radius:.8rem;padding:.75rem .9rem;font-size:.78rem;font-weight:800;transition:filter .15s;white-space:nowrap}
+        .kh-chat-action:hover{filter:brightness(1.12)}
+        .kh-chat-action:disabled{opacity:.45;cursor:not-allowed}
+        .kh-chat-audio{width:min(100%,280px);height:36px}
+        @media(max-width:640px){.kh-chat-log{height:55vh;min-height:280px}.kh-chat-bubble{max-width:98%}.kh-chat-composer{padding:.75rem}}
     </style>
 
 </head>
@@ -185,6 +200,20 @@
 
                 <button type="submit" id="publishBtnText" class="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg">Maili Yayınla ve Buluta Kaydet</button>
             </form>
+
+            <div class="border-t border-gray-700 pt-5 mt-5 space-y-3">
+                <div><h4 class="text-amber-300 font-black"><i class="fa-solid fa-trophy mr-2"></i>Haftalık Barbar Avı Sonuçlarını Yönet</h4><p class="text-xs text-gray-400 mt-1">Hafta bilgisi, en çok barbar öldüren 3 oyuncu, öldürme sayıları ve RSS ödüllerini doldur.</p></div>
+                <form id="khBarbarianAdminForm" onsubmit="saveBarbarianWinners(event)" class="space-y-3">
+                    <input id="khAdminBarbarianWeek" type="text" required maxlength="80" placeholder="Hafta / dönem (örn. 20–26 Ekim 2026)" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="rounded-xl border border-gray-700 p-3 space-y-2"><p class="text-amber-300 text-xs font-black">1. YER</p><input id="khWinner1Name" type="text" required maxlength="60" placeholder="Oyuncu adı" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"><input id="khWinner1Kills" type="number" min="0" required placeholder="Barbar sayısı" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"><input id="khWinner1RSS" type="text" required maxlength="120" placeholder="RSS ödülü (örn. 2M yemek)" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"></div>
+                        <div class="rounded-xl border border-gray-700 p-3 space-y-2"><p class="text-gray-300 text-xs font-black">2. YER</p><input id="khWinner2Name" type="text" required maxlength="60" placeholder="Oyuncu adı" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"><input id="khWinner2Kills" type="number" min="0" required placeholder="Barbar sayısı" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"><input id="khWinner2RSS" type="text" required maxlength="120" placeholder="RSS ödülü (örn. 1M odun)" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"></div>
+                        <div class="rounded-xl border border-gray-700 p-3 space-y-2"><p class="text-orange-400 text-xs font-black">3. YER</p><input id="khWinner3Name" type="text" required maxlength="60" placeholder="Oyuncu adı" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"><input id="khWinner3Kills" type="number" min="0" required placeholder="Barbar sayısı" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"><input id="khWinner3RSS" type="text" required maxlength="120" placeholder="RSS ödülü (örn. 500K taş)" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-sm"></div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2"><button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-5 py-3 rounded-xl text-xs">Kazananları yayınla</button><button type="button" onclick="clearBarbarianWinners()" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-200 font-bold px-5 py-3 rounded-xl text-xs">Sonuçları temizle</button></div>
+                    <p id="khBarbarianAdminStatus" class="text-xs text-gray-400" aria-live="polite"></p>
+                </form>
+            </div>
         </div>
 
         <!-- R4 ÖZEL SOHBET ODASI -->
@@ -250,7 +279,7 @@
                 <div>
                     <p class="kh-kicker mb-1">KINGDOM 4169 • COMMUNITY HUB</p>
                     <h2 class="text-xl sm:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-400 to-red-400">Krallığın nabzını kaçırma</h2>
-                    <p class="text-xs sm:text-sm text-gray-400 mt-1">Duyurular, etkinlikler, günlük hedefler ve topluluk oylamaları tek yerde.</p>
+                    <p class="text-xs sm:text-sm text-gray-400 mt-1">Krallık duyuruları, etkinlik takvimi ve haftalık barbar avı ödülleri tek yerde.</p>
                 </div>
                 <span class="self-start sm:self-auto text-[10px] text-amber-300 border border-amber-500/30 bg-amber-500/10 rounded-full px-3 py-1.5"><i class="fa-solid fa-bolt mr-1"></i> Topluluk Merkezi</span>
             </div>
@@ -291,36 +320,18 @@
                     <p id="khCountdownNote" class="kh-muted">Geri sayım örnek etkinlik saatine göre çalışır.</p>
                 </div>
 
-                <div class="kh-card space-y-3">
-                    <div class="flex items-center justify-between gap-2"><h3 class="font-black text-amber-300"><i class="fa-solid fa-trophy mr-2"></i>Haftanın oyuncuları</h3><span class="text-[10px] text-gray-500">Demo sıralama</span></div>
-                    <div id="khLeaderboard" class="space-y-3">
-                        <div><div class="flex justify-between text-xs mb-1"><span class="text-gray-200">1. Stark</span><span class="text-amber-300">980 puan</span></div><div class="kh-progress"><span style="width:98%"></span></div></div>
-                        <div><div class="flex justify-between text-xs mb-1"><span class="text-gray-200">2. Balyoz</span><span class="text-amber-300">850 puan</span></div><div class="kh-progress"><span style="width:85%"></span></div></div>
-                        <div><div class="flex justify-between text-xs mb-1"><span class="text-gray-200">3. Filankes</span><span class="text-amber-300">720 puan</span></div><div class="kh-progress"><span style="width:72%"></span></div></div>
+                <div class="kh-card space-y-3 lg:col-span-2">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div><p class="kh-kicker">WEEKLY BARBARIAN HUNT</p><h3 class="font-black text-amber-300 text-lg"><i class="fa-solid fa-trophy mr-2"></i>Haftalık Barbar Avı Kazananları</h3></div>
+                        <span id="khBarbarianWeek" class="text-xs text-amber-200 bg-amber-500/10 border border-amber-500/30 rounded-full px-3 py-1.5">Yeni hafta bekleniyor</span>
                     </div>
-                    <p class="kh-muted">Bu puanlar örnektir; oyuncu verileriyle otomatik senkronize değildir.</p>
-                </div>
-
-                <div class="kh-card space-y-3">
-                    <div class="flex items-center justify-between gap-2"><h3 class="font-black text-emerald-300"><i class="fa-solid fa-list-check mr-2"></i>Günün görevleri</h3><span id="khDailyProgress" class="text-[10px] text-emerald-300">0/3 tamamlandı</span></div>
-                    <label class="flex items-start gap-3 bg-gray-950/40 rounded-xl p-3 cursor-pointer"><input type="checkbox" class="kh-daily-check mt-1 accent-amber-500" data-task="1"><span class="text-xs text-gray-200">Krallık duyurularını oku</span></label>
-                    <label class="flex items-start gap-3 bg-gray-950/40 rounded-xl p-3 cursor-pointer"><input type="checkbox" class="kh-daily-check mt-1 accent-amber-500" data-task="2"><span class="text-xs text-gray-200">İttifakınla günlük hedefleri kontrol et</span></label>
-                    <label class="flex items-start gap-3 bg-gray-950/40 rounded-xl p-3 cursor-pointer"><input type="checkbox" class="kh-daily-check mt-1 accent-amber-500" data-task="3"><span class="text-xs text-gray-200">Bir oyuncuya yardım et veya bilgi paylaş</span></label>
-                    <div class="kh-progress"><span id="khDailyBar" style="width:0%"></span></div>
-                    <p class="kh-muted">Görev işaretleri bu tarayıcıda saklanır; sunucuya gönderilmez.</p>
-                </div>
-
-                <div class="kh-card space-y-3">
-                    <div class="flex items-center justify-between gap-2"><h3 class="font-black text-sky-300"><i class="fa-solid fa-square-poll-vertical mr-2"></i>Topluluk oylaması</h3><span class="text-[10px] text-gray-500">Tek oy</span></div>
-                    <p class="text-sm font-bold text-gray-100">Bir sonraki topluluk etkinliği ne olsun?</p>
-                    <div id="khPollOptions" class="space-y-2">
-                        <button type="button" class="kh-choice" data-option="war">Savaş stratejisi toplantısı</button>
-                        <button type="button" class="kh-choice" data-option="alliance">İttifaklar arası dostluk etkinliği</button>
-                        <button type="button" class="kh-choice" data-option="newplayers">Yeni oyuncular için rehber</button>
+                    <p class="text-xs text-gray-400">Haftanın en çok barbar öldüren 3 oyuncusu ve kazandıkları RSS ödülleri burada gösterilir.</p>
+                    <div id="khBarbarianWinners" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="rounded-xl border border-gray-800 bg-gray-950/50 p-4 text-center"><div class="text-amber-300 text-2xl mb-2"><i class="fa-solid fa-medal"></i></div><p class="font-bold text-gray-200">1. kazanan</p><p class="text-xs text-gray-500 mt-1">Admin tarafından eklenecek</p></div>
+                        <div class="rounded-xl border border-gray-800 bg-gray-950/50 p-4 text-center"><div class="text-gray-300 text-2xl mb-2"><i class="fa-solid fa-medal"></i></div><p class="font-bold text-gray-200">2. kazanan</p><p class="text-xs text-gray-500 mt-1">Admin tarafından eklenecek</p></div>
+                        <div class="rounded-xl border border-gray-800 bg-gray-950/50 p-4 text-center"><div class="text-amber-700 text-2xl mb-2"><i class="fa-solid fa-medal"></i></div><p class="font-bold text-gray-200">3. kazanan</p><p class="text-xs text-gray-500 mt-1">Admin tarafından eklenecek</p></div>
                     </div>
-                    <div id="khPollResult" class="hidden space-y-2"></div>
-                    <p id="khPollNote" class="kh-muted">Oy tarayıcında saklanır; sonuçlar diğer ziyaretçilerle ortak değildir.</p>
-                    <button type="button" id="khPollReset" class="text-[10px] text-gray-500 underline self-start">Bu cihazdaki oyumu sıfırla</button>
+                    <p id="khBarbarianUpdated" class="kh-muted">Kazananlar ve RSS ödülleri yönetici panelinden girilir. Veriler Firebase üzerinden diğer ziyaretçilere de gösterilir.</p>
                 </div>
 
                 <div class="kh-card space-y-3">
@@ -335,6 +346,58 @@
             </div>
         </section>
         <!-- END KINGDOM 4169 COMMUNITY HUB -->
+
+        <!-- Dedicated KINGDOM 4169 Community Chat -->
+        <section id="khVoiceChat" class="kh-chat-shell">
+            <div class="kh-chat-header p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-300 text-xl"><i class="fa-solid fa-headset"></i></div>
+                    <div><p class="kh-kicker">KINGDOM 4169 • COMMUNITY</p><h2 class="text-xl sm:text-2xl font-black text-white">Topluluk Sohbet Odası</h2><p class="text-xs text-gray-400 mt-1">Yazılı sohbet ve sesli mesaj paylaşımı</p></div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span id="khChatStatus" class="text-[10px] rounded-full px-3 py-1.5 border border-gray-700 bg-gray-950 text-gray-300">Bağlantı bekleniyor</span>
+                    <button type="button" id="khChatChangeIdentity" class="kh-chat-action bg-gray-800 border border-gray-700 text-gray-200">Kimliğim</button>
+                </div>
+            </div>
+            <div class="p-3 sm:p-5 space-y-3">
+                <div id="khChatIdentityCard" class="hidden rounded-xl border border-emerald-500/25 bg-emerald-950/20 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div><p class="text-[10px] uppercase tracking-widest text-emerald-300 font-bold">Sohbete bağlısın</p><p id="khChatIdentityText" class="text-sm text-gray-100 font-bold mt-1"></p></div>
+                    <span class="text-[10px] text-gray-400">Bu cihazda hatırlanır</span>
+                </div>
+                <div id="khChatMessages" class="kh-chat-log rounded-2xl border border-gray-800 p-3 sm:p-4 space-y-3" aria-live="polite">
+                    <div class="text-center text-xs text-gray-500 py-10">Sohbet mesajları yükleniyor…</div>
+                </div>
+                <div class="rounded-2xl border border-gray-800 bg-gray-950/60 p-3 sm:p-4 space-y-3 kh-chat-composer">
+                    <form id="khChatTextForm" class="flex flex-col sm:flex-row gap-2">
+                        <input id="khChatTextInput" maxlength="1000" class="kh-chat-input flex-1" placeholder="Mesajını yaz…" autocomplete="off" required>
+                        <button id="khChatSendButton" class="kh-chat-action bg-gradient-to-r from-amber-600 to-yellow-600 text-white" type="submit"><i class="fa-solid fa-paper-plane"></i> Gönder</button>
+                    </form>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <p class="text-[10px] text-gray-500">Sesli mesajlar için mikrofon izni gerekir. Kayıt göndermeden önce dinleyebilirsin.</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <button type="button" id="khRecordButton" class="kh-chat-action bg-red-950 border border-red-800 text-red-200"><i class="fa-solid fa-microphone"></i> Ses kaydet</button>
+                            <button type="button" id="khStopButton" class="kh-chat-action bg-gray-800 border border-gray-700 text-gray-200" disabled><i class="fa-solid fa-stop"></i> Durdur</button>
+                            <button type="button" id="khSendAudioButton" class="kh-chat-action bg-emerald-700 text-white" disabled><i class="fa-solid fa-upload"></i> Sesi gönder</button>
+                        </div>
+                    </div>
+                    <audio id="khAudioPreview" class="kh-chat-audio hidden" controls></audio>
+                    <p id="khChatFeedback" class="text-xs text-gray-400" role="status"></p>
+                </div>
+            </div>
+        </section>
+
+        <div id="khChatRegistrationModal" class="fixed inset-0 z-[70] bg-black/85 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+            <div class="w-full max-w-md rounded-3xl border border-amber-500/40 bg-gray-900 p-5 sm:p-6 shadow-2xl space-y-4">
+                <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-300"><i class="fa-solid fa-id-card text-lg"></i></div><div><p class="kh-kicker">FIRST TIME SETUP</p><h3 class="text-xl font-black text-white">Sohbet kimliğini oluştur</h3></div></div>
+                <p class="text-xs text-gray-400">Sohbete katılmak için oyuncu adın ve oyun içi ID'n zorunludur. Bilgiler bu cihazda hatırlanır; bu form tek başına oyun hesabını doğrulamaz.</p>
+                <form id="khChatRegistrationForm" class="space-y-3">
+                    <label class="block text-xs font-bold text-gray-300">Oyuncu adı<input id="khChatRegisterName" class="kh-chat-input mt-1" maxlength="32" autocomplete="nickname" required placeholder="Oyun içindeki adın"></label>
+                    <label class="block text-xs font-bold text-gray-300">Oyuncu ID'si<input id="khChatRegisterPlayerId" class="kh-chat-input mt-1" maxlength="32" inputmode="numeric" autocomplete="off" required placeholder="Oyun içi ID"></label>
+                    <p id="khChatRegistrationError" class="hidden text-xs text-red-300"></p>
+                    <button type="submit" class="w-full kh-chat-action bg-gradient-to-r from-amber-600 to-yellow-600 text-white py-3"><i class="fa-solid fa-right-to-bracket"></i> Sohbete katıl</button>
+                </form>
+            </div>
+        </div>
 
     </main>
 
@@ -780,6 +843,44 @@
             });
         }
 
+        // Automatic chat translation (best-effort external translation service).
+        const chatTranslationCache = new Map();
+        const chatLanguageNames = { tr: 'Turkish', en: 'English', ru: 'Russian', ko: 'Korean', vi: 'Vietnamese' };
+        async function translateChatText(text, sourceLang, targetLang) {
+            const original = String(text || '');
+            const source = chatLanguageNames[sourceLang] ? sourceLang : 'en';
+            const target = chatLanguageNames[targetLang] ? targetLang : 'tr';
+            if (!original.trim() || source === target) return original;
+            const key = source + '|' + target + '|' + original;
+            if (chatTranslationCache.has(key)) return chatTranslationCache.get(key);
+            try {
+                const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(original.slice(0, 450)) + '&langpair=' + encodeURIComponent(source + '|' + target);
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Translation request failed');
+                const data = await response.json();
+                const translated = data && data.responseData && data.responseData.translatedText;
+                if (typeof translated === 'string' && translated.trim()) {
+                    chatTranslationCache.set(key, translated);
+                    return translated;
+                }
+            } catch (error) {
+                console.warn('Chat translation unavailable:', error);
+            }
+            return original;
+        }
+        function addAutomaticTranslation(container, text, sourceLang) {
+            const targetLang = currentLang || 'tr';
+            if (!text || sourceLang === targetLang) return;
+            const translated = document.createElement('p');
+            translated.className = 'text-[11px] text-sky-200 mt-1 border-t border-gray-700/70 pt-1';
+            translated.textContent = 'Çeviri hazırlanıyor…';
+            container.appendChild(translated);
+            translateChatText(text, sourceLang, targetLang).then(result => {
+                if (!translated.isConnected) return;
+                translated.textContent = result === text ? 'Otomatik çeviri şu an kullanılamıyor.' : '↳ ' + result;
+            });
+        }
+
         function renderChat() {
             const chatBox = document.getElementById('chatMessages');
             if(!chatBox) return;
@@ -790,11 +891,14 @@
                 div.innerHTML = `
                     <div class="flex justify-between items-center text-[10px] text-gray-400">
                         <span class="font-bold text-amber-400">${escapeHtml(msg.sender)}</span>
-                        <span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800">Bulut Sync (${currentLang.toUpperCase()})</span>
+                        <span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800">${currentLang.toUpperCase()} · otomatik çeviri</span>
                     </div>
-                    <p class="text-gray-200 text-xs">${escapeHtml(msg.text)}</p>
+                    <p class="text-gray-200 text-xs"></p>
                 `;
+                const originalBody = div.querySelector('p');
+                originalBody.textContent = msg.text || '';
                 chatBox.appendChild(div);
+                addAutomaticTranslation(div, msg.text || '', msg.lang || 'en');
             });
             chatBox.scrollTop = chatBox.scrollHeight;
         }
@@ -995,14 +1099,9 @@
         }
     
 
-        // KINGDOM 4169 Community Hub: local-only interactions (no shared server storage).
+        // KINGDOM 4169 community features: event countdown + Firebase weekly barbarian winners.
         (function initKingdomCommunityHub() {
-            const storage = {
-                get(key, fallback) { try { const v = localStorage.getItem(key); return v === null ? fallback : JSON.parse(v); } catch (_) { return fallback; } },
-                set(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch (_) {} },
-                remove(key) { try { localStorage.removeItem(key); } catch (_) {} }
-            };
-
+            // Set the next event date here (UTC). Update this when the kingdom schedule changes.
             const targetDate = new Date('2026-10-25T17:00:00Z');
             function updateCountdown() {
                 const now = Date.now();
@@ -1014,73 +1113,324 @@
                 const values = {khDays: days, khHours: hours, khMinutes: minutes, khSeconds: seconds};
                 Object.entries(values).forEach(([id, value]) => { const el = document.getElementById(id); if (el) el.textContent = String(value).padStart(2, '0'); });
                 const note = document.getElementById('khCountdownNote');
-                if (note && targetDate.getTime() <= now) note.textContent = 'Örnek etkinlik zamanı geldi. Yeni etkinlik tarihi koddan güncellenebilir.';
+                if (note && targetDate.getTime() <= now) note.textContent = 'Etkinlik zamanı geldi. Yeni tarihi yönetici tarafından güncelleyin.';
             }
             updateCountdown();
             setInterval(updateCountdown, 1000);
 
-            const dailyChecks = Array.from(document.querySelectorAll('.kh-daily-check'));
-            const savedDaily = storage.get('kingdom4169_daily_tasks', []);
-            dailyChecks.forEach(input => {
-                input.checked = savedDaily.includes(input.dataset.task);
-                input.addEventListener('change', () => {
-                    const done = dailyChecks.filter(x => x.checked).map(x => x.dataset.task);
-                    storage.set('kingdom4169_daily_tasks', done);
-                    updateDaily(done);
-                });
+            // Public live display: all visitors receive the same data from Firebase.
+            db.ref('kingdom4169/weeklyBarbarianWinners').on('value', snapshot => {
+                renderBarbarianWinners(snapshot.val());
+            }, error => {
+                console.error('Haftalık barbar sonuçları yüklenemedi:', error);
+                const status = document.getElementById('khBarbarianUpdated');
+                if (status) status.textContent = 'Sonuçlar yüklenemedi. Firebase bağlantısını ve Database Rules ayarlarını kontrol edin.';
             });
-            function updateDaily(done) {
-                const count = done.length;
-                const label = document.getElementById('khDailyProgress');
-                const bar = document.getElementById('khDailyBar');
-                if (label) label.textContent = `${count}/${dailyChecks.length} tamamlandı`;
-                if (bar) bar.style.width = `${dailyChecks.length ? count / dailyChecks.length * 100 : 0}%`;
-            }
-            updateDaily(savedDaily);
+        })();
 
-            const pollOptions = {
-                war: 'Savaş stratejisi toplantısı',
-                alliance: 'İttifaklar arası dostluk etkinliği',
-                newplayers: 'Yeni oyuncular için rehber'
-            };
-            const pollKey = 'kingdom4169_poll_choice';
-            const pollButtons = Array.from(document.querySelectorAll('#khPollOptions [data-option]'));
-            const resultsBox = document.getElementById('khPollResult');
-            const pollNote = document.getElementById('khPollNote');
-            function renderPoll() {
-                const choice = storage.get(pollKey, null);
-                pollButtons.forEach(btn => {
-                    btn.setAttribute('aria-pressed', String(btn.dataset.option === choice));
-                    btn.disabled = Boolean(choice);
-                    btn.style.opacity = choice && btn.dataset.option !== choice ? '.65' : '1';
-                });
-                if (choice && resultsBox) {
-                    resultsBox.classList.remove('hidden');
-                    resultsBox.innerHTML = '';
-                    Object.entries(pollOptions).forEach(([key, label]) => {
-                        const row = document.createElement('div');
-                        row.className = 'text-xs';
-                        const title = document.createElement('div');
-                        title.className = 'flex justify-between gap-2 mb-1';
-                        const left = document.createElement('span'); left.textContent = label;
-                        const right = document.createElement('span'); right.className = 'text-amber-300'; right.textContent = key === choice ? 'Senin seçimin' : '—';
-                        title.append(left, right);
-                        const bar = document.createElement('div'); bar.className = 'kh-progress';
-                        const fill = document.createElement('span'); fill.style.width = key === choice ? '100%' : '0%';
-                        bar.appendChild(fill); row.append(title, bar); resultsBox.appendChild(row);
-                    });
-                    if (pollNote) pollNote.textContent = 'Seçimin bu tarayıcıda saklandı. Bu ekran ortak veya gerçek zamanlı oy sayısı göstermiyor.';
-                } else {
-                    if (resultsBox) { resultsBox.classList.add('hidden'); resultsBox.innerHTML = ''; }
-                    if (pollNote) pollNote.textContent = 'Bir seçenek seç; oyun yalnızca bu tarayıcıda saklanır.';
-                }
+        function renderBarbarianWinners(data) {
+            const container = document.getElementById('khBarbarianWinners');
+            if (!container) return;
+            const weekLabel = document.getElementById('khBarbarianWeek');
+            const updatedLabel = document.getElementById('khBarbarianUpdated');
+            if (!data || !Array.isArray(data.winners) || !data.winners.length) {
+                if (weekLabel) weekLabel.textContent = 'Yeni hafta bekleniyor';
+                container.innerHTML = [1,2,3].map((place) => `<div class="rounded-xl border border-gray-800 bg-gray-950/50 p-4 text-center"><div class="text-amber-300 text-2xl mb-2"><i class="fa-solid fa-medal"></i></div><p class="font-bold text-gray-200">${place}. kazanan</p><p class="text-xs text-gray-500 mt-1">Admin tarafından eklenecek</p></div>`).join('');
+                if (updatedLabel) updatedLabel.textContent = 'Kazananlar ve RSS ödülleri yönetici panelinden girilir.';
+                return;
             }
-            pollButtons.forEach(btn => btn.addEventListener('click', () => {
-                if (!storage.get(pollKey, null)) { storage.set(pollKey, btn.dataset.option); renderPoll(); }
+            if (weekLabel) weekLabel.textContent = data.week || 'Haftalık sonuçlar';
+            const medals = ['text-amber-300','text-gray-300','text-orange-400'];
+            container.innerHTML = data.winners.slice(0,3).map((winner, index) => {
+                const name = escapeHtml(String(winner.name || 'İsimsiz oyuncu'));
+                const kills = Number.isFinite(Number(winner.kills)) ? Number(winner.kills).toLocaleString('tr-TR') : '—';
+                const reward = escapeHtml(String(winner.reward || 'Belirtilmedi'));
+                return `<div class="rounded-xl border border-amber-500/20 bg-gray-950/50 p-4 text-center"><div class="${medals[index] || 'text-amber-300'} text-2xl mb-2"><i class="fa-solid fa-medal"></i></div><p class="text-[10px] uppercase tracking-widest text-gray-500">${index + 1}. sıra</p><p class="font-black text-white mt-1 break-words">${name}</p><p class="text-xs text-gray-400 mt-2"><i class="fa-solid fa-skull mr-1"></i>${kills} barbar</p><div class="mt-3 rounded-lg bg-amber-500/10 border border-amber-500/20 p-2"><p class="text-[9px] text-amber-300 uppercase font-bold">RSS ödülü</p><p class="text-xs text-amber-100 mt-1 break-words">${reward}</p></div></div>`;
+            }).join('');
+            if (updatedLabel) {
+                const date = data.updatedAt ? new Date(data.updatedAt).toLocaleString('tr-TR') : '';
+                updatedLabel.textContent = date ? `Son güncelleme: ${date}` : 'Haftalık sonuçlar Firebase üzerinden yayınlanıyor.';
+            }
+        }
+
+        async function saveBarbarianWinners(event) {
+            event.preventDefault();
+            if (!localStorage.getItem('rok_admin')) {
+                alert('Bu işlemi yapmak için yönetici girişi yapmalısınız.');
+                return;
+            }
+            const status = document.getElementById('khBarbarianAdminStatus');
+            const week = document.getElementById('khAdminBarbarianWeek').value.trim();
+            const winners = [1,2,3].map(place => ({
+                place,
+                name: document.getElementById(`khWinner${place}Name`).value.trim(),
+                kills: Number(document.getElementById(`khWinner${place}Kills`).value),
+                reward: document.getElementById(`khWinner${place}RSS`).value.trim()
             }));
-            const resetBtn = document.getElementById('khPollReset');
-            if (resetBtn) resetBtn.addEventListener('click', () => { storage.remove(pollKey); renderPoll(); });
-            renderPoll();
+            if (!week || winners.some(w => !w.name || !w.reward || !Number.isFinite(w.kills) || w.kills < 0)) {
+                if (status) status.textContent = 'Lütfen hafta, oyuncu adı, barbar sayısı ve RSS ödüllerinin tamamını doldurun.';
+                return;
+            }
+            try {
+                await db.ref('kingdom4169/weeklyBarbarianWinners').set({ week, winners, updatedAt: Date.now(), updatedBy: localStorage.getItem('rok_admin') || 'Admin' });
+                if (status) status.textContent = 'Haftalık barbar avı sonuçları yayınlandı ve Firebase’e kaydedildi.';
+            } catch (error) {
+                console.error('Haftalık sonuçlar kaydedilemedi:', error);
+                if (status) status.textContent = 'Kaydedilemedi. Firebase Database Rules ve bağlantı ayarlarını kontrol edin.';
+            }
+        }
+
+        async function clearBarbarianWinners() {
+            if (!localStorage.getItem('rok_admin')) {
+                alert('Bu işlemi yapmak için yönetici girişi yapmalısınız.');
+                return;
+            }
+            if (!confirm('Haftalık barbar avı sonuçlarını herkesten kaldırmak istiyor musunuz?')) return;
+            const status = document.getElementById('khBarbarianAdminStatus');
+            try {
+                await db.ref('kingdom4169/weeklyBarbarianWinners').remove();
+                document.getElementById('khBarbarianAdminForm').reset();
+                if (status) status.textContent = 'Haftalık sonuçlar temizlendi.';
+            } catch (error) {
+                console.error('Sonuçlar temizlenemedi:', error);
+                if (status) status.textContent = 'Sonuçlar temizlenemedi. Firebase Database Rules ayarlarını kontrol edin.';
+            }
+        }
+
+
+        // Separate text + voice community room. Identity persists on this browser only.
+        (function initDedicatedCommunityChat() {
+            const PROFILE_KEY = 'kingdom4169_chat_profile_v1';
+            const chatRef = db.ref('kingdom4169/communityChat/messages');
+            const log = document.getElementById('khChatMessages');
+            const status = document.getElementById('khChatStatus');
+            const feedback = document.getElementById('khChatFeedback');
+            const modal = document.getElementById('khChatRegistrationModal');
+            const form = document.getElementById('khChatRegistrationForm');
+            const nameInput = document.getElementById('khChatRegisterName');
+            const playerIdInput = document.getElementById('khChatRegisterPlayerId');
+            const recordButton = document.getElementById('khRecordButton');
+            const stopButton = document.getElementById('khStopButton');
+            const sendAudioButton = document.getElementById('khSendAudioButton');
+            const preview = document.getElementById('khAudioPreview');
+            let profile = null;
+            let mediaRecorder = null;
+            let audioChunks = [];
+            let audioBlob = null;
+            let audioPreviewUrl = null;
+            let chatListenerStarted = false;
+
+            function getProfile() {
+                try { return JSON.parse(localStorage.getItem(PROFILE_KEY) || 'null'); }
+                catch (_) { return null; }
+            }
+            function setFeedback(message, isError = false) {
+                if (!feedback) return;
+                feedback.textContent = message;
+                feedback.className = 'text-xs ' + (isError ? 'text-red-300' : 'text-gray-400');
+            }
+            function showRegistration() {
+                modal.classList.remove('hidden');
+                nameInput.value = profile?.name || '';
+                playerIdInput.value = profile?.playerId || '';
+                document.getElementById('khChatRegistrationError').classList.add('hidden');
+            }
+            function renderIdentity() {
+                const card = document.getElementById('khChatIdentityCard');
+                const label = document.getElementById('khChatIdentityText');
+                if (!profile) { card.classList.add('hidden'); return; }
+                card.classList.remove('hidden');
+                label.textContent = profile.name + ' • ID: ' + profile.playerId;
+            }
+            function ensureProfile() {
+                profile = getProfile();
+                if (!profile || !profile.name || !profile.playerId) showRegistration();
+                else { modal.classList.add('hidden'); renderIdentity(); startListener(); }
+            }
+            function safeText(node, value) { node.textContent = value == null ? '' : String(value); }
+            function renderMessage(message) {
+                if (!message || !message.id) return;
+                const empty = log.querySelector('[data-empty]');
+                if (empty) empty.remove();
+                if (log.querySelector('[data-message-id="' + CSS.escape(message.id) + '"]')) return;
+                const article = document.createElement('article');
+                article.dataset.messageId = message.id;
+                article.className = 'flex ' + (profile && message.playerId === profile.playerId ? 'justify-end' : 'justify-start');
+                const bubble = document.createElement('div');
+                bubble.className = 'kh-chat-bubble ' + (profile && message.playerId === profile.playerId ? 'own' : '');
+                const top = document.createElement('div');
+                top.className = 'flex flex-wrap items-center gap-x-2 gap-y-1 mb-2';
+                const author = document.createElement('strong');
+                author.className = 'text-xs text-amber-300';
+                safeText(author, message.playerName || 'Oyuncu');
+                const playerId = document.createElement('span');
+                playerId.className = 'text-[9px] text-gray-500';
+                safeText(playerId, 'ID ' + (message.playerId || '—'));
+                const time = document.createElement('span');
+                time.className = 'text-[9px] text-gray-500 ml-auto';
+                safeText(time, message.timestamp ? new Date(message.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '');
+                top.append(author, playerId, time);
+                bubble.appendChild(top);
+                if (message.type === 'audio' && message.audioUrl) {
+                    const audio = document.createElement('audio');
+                    audio.controls = true;
+                    audio.preload = 'none';
+                    audio.className = 'kh-chat-audio';
+                    audio.src = message.audioUrl;
+                    bubble.appendChild(audio);
+                    const caption = document.createElement('p');
+                    caption.className = 'text-[10px] text-gray-400 mt-2';
+                    safeText(caption, 'Sesli mesaj');
+                    bubble.appendChild(caption);
+                } else {
+                    const body = document.createElement('p');
+                    body.className = 'text-sm text-gray-100 whitespace-pre-wrap';
+                    safeText(body, message.text || '');
+                    bubble.appendChild(body);
+                    if (message.text) addAutomaticTranslation(bubble, message.text, message.lang || 'en');
+                }
+                article.appendChild(bubble);
+                log.appendChild(article);
+                log.scrollTop = log.scrollHeight;
+            }
+            function startListener() {
+                if (chatListenerStarted) return;
+                chatListenerStarted = true;
+                status.textContent = 'Bağlanıyor…';
+                chatRef.limitToLast(100).on('value', snapshot => {
+                    const items = [];
+                    snapshot.forEach(child => { items.push(child.val()); });
+                    log.innerHTML = '';
+                    if (!items.length) {
+                        const empty = document.createElement('p');
+                        empty.dataset.empty = 'true';
+                        empty.className = 'text-center text-xs text-gray-500 py-10';
+                        empty.textContent = 'Henüz mesaj yok. Sohbeti ilk başlatan sen ol!';
+                        log.appendChild(empty);
+                    } else items.sort((a,b) => (a.timestamp || 0) - (b.timestamp || 0)).forEach(renderMessage);
+                    status.textContent = 'Canlı sohbet';
+                }, error => {
+                    console.error('Topluluk sohbeti okunamadı:', error);
+                    status.textContent = 'Bağlantı hatası';
+                    setFeedback('Sohbet açılamadı. Firebase Realtime Database Rules ayarlarını kontrol edin.', true);
+                });
+            }
+            async function publishMessage(payload) {
+                if (!profile) { showRegistration(); throw new Error('Önce oyuncu kimliğini oluştur.'); }
+                const ref = chatRef.push();
+                await ref.set({
+                    id: ref.key,
+                    playerName: profile.name,
+                    playerId: profile.playerId,
+                    type: payload.type,
+                    text: payload.text || '',
+                    audioUrl: payload.audioUrl || '',
+                    timestamp: Date.now()
+                });
+            }
+
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                const name = nameInput.value.trim().replace(/\s+/g, ' ');
+                const playerId = playerIdInput.value.trim();
+                const error = document.getElementById('khChatRegistrationError');
+                if (name.length < 2 || !playerId) {
+                    error.textContent = 'Oyuncu adı ve oyun içi ID zorunludur.';
+                    error.classList.remove('hidden');
+                    return;
+                }
+                if (!/^[A-Za-z0-9_-]{2,32}$/.test(playerId)) {
+                    error.textContent = 'ID 2–32 karakter olmalı; harf, rakam, tire veya alt çizgi kullan.';
+                    error.classList.remove('hidden');
+                    return;
+                }
+                profile = {name: name.slice(0,32), playerId: playerId, savedAt: Date.now()};
+                localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+                modal.classList.add('hidden');
+                renderIdentity();
+                startListener();
+                setFeedback('Kimliğin bu cihazda kaydedildi.');
+            });
+
+            document.getElementById('khChatChangeIdentity').addEventListener('click', showRegistration);
+            document.getElementById('khChatTextForm').addEventListener('submit', async event => {
+                event.preventDefault();
+                if (!profile) { showRegistration(); return; }
+                const input = document.getElementById('khChatTextInput');
+                const text = input.value.trim();
+                if (!text) return;
+                if (text.length > 1000) { setFeedback('Mesaj en fazla 1000 karakter olabilir.', true); return; }
+                const button = document.getElementById('khChatSendButton');
+                button.disabled = true;
+                try { await publishMessage({type:'text', text, lang: currentLang || 'tr'}); input.value = ''; setFeedback('Mesaj gönderildi.'); }
+                catch (error) { console.error(error); setFeedback('Mesaj gönderilemedi. Firebase kurallarını kontrol edin.', true); }
+                finally { button.disabled = false; }
+            });
+
+            recordButton.addEventListener('click', async () => {
+                if (!profile) { showRegistration(); return; }
+                if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+                    setFeedback('Bu tarayıcı ses kaydını desteklemiyor. Güncel Safari/Chrome ve HTTPS deneyin.', true); return;
+                }
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+                    audioChunks = [];
+                    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : (MediaRecorder.isTypeSupported('audio/mp4') ? 'audio/mp4' : '');
+                    mediaRecorder = new MediaRecorder(stream, mimeType ? {mimeType} : undefined);
+                    mediaRecorder.ondataavailable = event => { if (event.data && event.data.size) audioChunks.push(event.data); };
+                    mediaRecorder.onstop = () => {
+                        stream.getTracks().forEach(track => track.stop());
+                        const type = mediaRecorder.mimeType || 'audio/webm';
+                        audioBlob = new Blob(audioChunks, {type});
+                        if (audioPreviewUrl) URL.revokeObjectURL(audioPreviewUrl);
+                        audioPreviewUrl = URL.createObjectURL(audioBlob);
+                        preview.src = audioPreviewUrl;
+                        preview.classList.remove('hidden');
+                        sendAudioButton.disabled = false;
+                        recordButton.disabled = false;
+                        stopButton.disabled = true;
+                        setFeedback('Kayıt hazır. Göndermeden önce dinleyebilirsin. Maksimum önerilen süre 60 saniye.');
+                    };
+                    mediaRecorder.start();
+                    recordButton.disabled = true;
+                    stopButton.disabled = false;
+                    sendAudioButton.disabled = true;
+                    setFeedback('Kayıt yapılıyor… Durdur düğmesine basınca önizleme hazırlanacak.');
+                    window.khAudioSafetyTimer = setTimeout(() => { if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop(); }, 60000);
+                } catch (error) {
+                    console.error('Mikrofon erişimi başarısız:', error);
+                    setFeedback('Mikrofon izni verilmedi veya erişilemiyor.', true);
+                }
+            });
+            stopButton.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+                clearTimeout(window.khAudioSafetyTimer);
+            });
+            sendAudioButton.addEventListener('click', async () => {
+                if (!profile || !audioBlob) return;
+                if (audioBlob.size > 8 * 1024 * 1024) { setFeedback('Ses dosyası 8 MB sınırını aşıyor. Daha kısa kayıt yap.', true); return; }
+                if (typeof firebase.storage !== 'function') { setFeedback('Firebase Storage SDK yüklenemedi.', true); return; }
+                sendAudioButton.disabled = true;
+                setFeedback('Ses yükleniyor…');
+                try {
+                    const storage = firebase.storage();
+                    const extension = audioBlob.type.includes('mp4') ? 'm4a' : 'webm';
+                    const path = 'kingdom4169/communityChatAudio/' + Date.now() + '_' + profile.playerId + '.' + extension;
+                    const upload = await storage.ref(path).put(audioBlob, {contentType: audioBlob.type});
+                    const audioUrl = await upload.ref.getDownloadURL();
+                    await publishMessage({type:'audio', audioUrl});
+                    audioBlob = null;
+                    preview.pause(); preview.removeAttribute('src'); preview.classList.add('hidden');
+                    sendAudioButton.disabled = true;
+                    setFeedback('Sesli mesaj paylaşıldı.');
+                } catch (error) {
+                    console.error('Sesli mesaj yüklenemedi:', error);
+                    setFeedback('Ses gönderilemedi. Firebase Storage ayarlarını ve Storage Rules izinlerini kontrol edin.', true);
+                    sendAudioButton.disabled = false;
+                }
+            });
+
+            ensureProfile();
         })();
 
     </script>
