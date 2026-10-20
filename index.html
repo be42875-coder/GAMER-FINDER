@@ -179,7 +179,7 @@
                     </div>
                     <div>
                         <h3 id="r4SectionTitle" class="text-base sm:text-lg font-black text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-amber-400 uppercase">R4 GİZLİ KOMUTA ODASI</h3>
-                        <p id="r4SectionDesc" class="text-[11px] sm:text-xs text-gray-300">Sadece 8 haneli yetki kodu (41692026) ile girilebilen şifreli kanal.</p>
+                        <p id="r4SectionDesc" class="text-[11px] sm:text-xs text-gray-300">Yetkili erişim gerektiren özel komuta kanalı.</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 bg-red-950/80 border border-red-500/40 px-3.5 py-1.5 rounded-xl self-start sm:self-auto">
@@ -188,7 +188,7 @@
                 </div>
             </div>
             <button onclick="openR4Modal()" id="r4EnterBtnText" class="w-full bg-gradient-to-r from-red-600 to-rose-700 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-lg">
-                <i class="fa-solid fa-key mr-1"></i> R4 Odasına Gir (Şifre: 41692026)
+                <i class="fa-solid fa-key mr-1"></i> R4 Odasına Gir
             </button>
         </div>
 
@@ -250,10 +250,10 @@
             <h3 id="r4ModalTitle" class="text-lg font-black text-red-400">R4 Yetki Doğrulaması</h3>
             <form onsubmit="handleR4Auth(event)" class="space-y-3">
                 <input type="password" id="r4CodeInput" maxlength="8" placeholder="••••••••" required class="w-full text-center tracking-[0.5s] bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-yellow-400 font-mono text-lg">
-                <div id="r4LoginError" class="hidden text-red-400 text-xs text-center">Hatalı kod! (Test: 41692026)</div>
+                <div id="r4LoginError" class="hidden text-red-400 text-xs text-center">Hatalı erişim kodu.</div>
                 <button type="submit" id="r4VerifyBtn" class="w-full bg-red-600 text-white font-bold py-3 rounded-xl text-sm">Doğrula</button>
             </form>
-            <p id="r4ModalHint" class="text-[11px] text-gray-400 text-center">R4 Kod: <b class="text-yellow-400">41692026</b></p>
+            <p id="r4ModalHint" class="text-[11px] text-gray-400 text-center">Erişim kodu yalnızca yetkili kişilerle paylaşılır.</p>
         </div>
     </div>
 
@@ -306,9 +306,9 @@
                 postContentPlaceholder: "Mail İçeriği...",
                 publishBtnText: "Maili Yayınla ve Buluta Kaydet",
                 r4SectionTitle: "R4 GİZLİ KOMUTA ODASI",
-                r4SectionDesc: "Sadece 8 haneli yetki kodu (41692026) ile girilebilen şifreli kanal.",
+                r4SectionDesc: "Yetkili erişim gerektiren özel komuta kanalı.",
                 activeR4Label: "Aktif R4: ",
-                r4EnterBtnText: "R4 Odasına Gir (Şifre:)",
+                r4EnterBtnText: "R4 Odasına Gir",
                 r4ActiveTitle: "R4 Güvenli Komuta Kanalı Aktif",
                 r4LogoutText: "Çıkış Yap",
                 r4SenderPlaceholder: "R4 İsim",
@@ -348,9 +348,9 @@
                 postContentPlaceholder: "Mail Content...",
                 publishBtnText: "Publish Mail & Save to Cloud",
                 r4SectionTitle: "R4 SECRET COMMAND ROOM",
-                r4SectionDesc: "Encrypted channel accessible only with 8-digit authorization code (41692026).",
+                r4SectionDesc: "Private command channel for authorized members.",
                 activeR4Label: "Active R4: ",
-                r4EnterBtnText: "Enter R4 Room (Passcode: 41692026)",
+                r4EnterBtnText: "Enter R4 Room",
                 r4ActiveTitle: "R4 Secure Command Channel Active",
                 r4LogoutText: "Logout",
                 r4SenderPlaceholder: "R4 Name",
@@ -367,7 +367,7 @@
                 modalAdminHint: "Test Admin: admin1@kingdom4169.com / Rok4169_Admin1!",
                 r4ModalTitle: "R4 Authorization Verification",
                 r4VerifyBtn: "Verify",
-                r4ModalHint: "R4 Code: 41692026",
+                r4ModalHint: "Access code is shared only with authorized members.",
                 no_posts: "No official mail published in this tab yet.",
                 translate_badge: "English Translation Active",
                 authorLabel: "Author: "
@@ -390,9 +390,9 @@
                 postContentPlaceholder: "Содержание...",
                 publishBtnText: "Опубликовать в облаке",
                 r4SectionTitle: "СЕКРЕТНАЯ КОМНАТА R4",
-                r4SectionDesc: "Зашифрованный канал доступа (код: 41692026).",
+                r4SectionDesc: "Закрытый командный канал для уполномоченных участников.",
                 activeR4Label: "R4: ",
-                r4EnterBtnText: "Войти в R4 (Код: 41692026)",
+                r4EnterBtnText: "Войти в R4",
                 r4ActiveTitle: "Защищенный командный канал R4 активен",
                 r4LogoutText: "Выйти",
                 r4SenderPlaceholder: "Имя R4",
@@ -409,7 +409,7 @@
                 modalAdminHint: "Тест Админ: admin1@kingdom4169.com / Rok4169_Admin1!",
                 r4ModalTitle: "Проверка R4",
                 r4VerifyBtn: "Подтвердить",
-                r4ModalHint: "Код R4: 41692026",
+                r4ModalHint: "Код доступа сообщается только уполномоченным участникам.",
                 no_posts: "В этой вкладке пока нет официальных писем.",
                 translate_badge: "Русский перевод активен",
                 authorLabel: "Автор: "
@@ -432,9 +432,9 @@
                 postContentPlaceholder: "메일 내용...",
                 publishBtnText: "클라우드에 게시",
                 r4SectionTitle: "R4 비밀 지휘실",
-                r4SectionDesc: "8자리 권한 코드(41692026)로 입장.",
+                r4SectionDesc: "권한이 있는 구성원만 이용할 수 있는 비공개 지휘 채널입니다.",
                 activeR4Label: "활성 R4: ",
-                r4EnterBtnText: "R4실 입장 (암호: 41692026)",
+                r4EnterBtnText: "R4실 입장",
                 r4ActiveTitle: "R4 보안 지휘 채널 활성화됨",
                 r4LogoutText: "로그아웃",
                 r4SenderPlaceholder: "R4 닉네임",
@@ -451,7 +451,7 @@
                 modalAdminHint: "테스트 관리자: admin1@kingdom4169.com / Rok4169_Admin1!",
                 r4ModalTitle: "R4 권한 인증",
                 r4VerifyBtn: "인증",
-                r4ModalHint: "R4 코드: 41692026",
+                r4ModalHint: "접근 코드는 권한이 있는 구성원에게만 공유됩니다.",
                 no_posts: "이 탭에는 아직 게시된 공식 메일이 없습니다.",
                 translate_badge: "한국어 번역 활성화됨",
                 authorLabel: "작성자: "
@@ -474,9 +474,9 @@
                 postContentPlaceholder: "Nội dung...",
                 publishBtnText: "Đăng lên đám mây",
                 r4SectionTitle: "PHÒNG CHỈ HUY BÍ MẬT R4",
-                r4SectionDesc: "Kênh mã hóa truy cập bằng mã (41692026).",
+                r4SectionDesc: "Kênh chỉ huy riêng dành cho thành viên được cấp quyền.",
                 activeR4Label: "R4: ",
-                r4EnterBtnText: "Vào phòng R4 (Mật khẩu: 41692026)",
+                r4EnterBtnText: "Vào phòng R4",
                 r4ActiveTitle: "Kênh bảo mật R4 hoạt động",
                 r4LogoutText: "Đăng xuất",
                 r4SenderPlaceholder: "Tên R4",
@@ -493,7 +493,7 @@
                 modalAdminHint: "QTV thử nghiệm: admin1@kingdom4169.com / Rok4169_Admin1!",
                 r4ModalTitle: "Xác thực quyền R4",
                 r4VerifyBtn: "Xác thực",
-                r4ModalHint: "Mã R4: 41692026",
+                r4ModalHint: "Mã truy cập chỉ được chia sẻ với thành viên được cấp quyền.",
                 no_posts: "Chưa có thư chính thức nào trong tab này.",
                 translate_badge: "Bản dịch tiếng Việt đang bật",
                 authorLabel: "Tác giả: "
@@ -774,23 +774,22 @@
             document.getElementById('adminLogoutBtn').classList.remove('hidden');
         }
 
-        // 🤖 TELEGRAM BOT BİLDİRİM FONKSİYONU
-        function sendTelegramNotification(title, content) {
-            const token = "8704457333:AAEmif2dg9wtwmoXB-DpEBk1m0NPq-L71cE";
-            const chatId = "-4365711778";
-
-            const message = `👑 *KINGDOM 4169 - YENİ RESMİ MAİL* 👑\n\n*${title}*\n\n${content}\n\n🌐 _gamerrender.com.tr_`;
-            const url = `https://api.telegram.org/bot${token}/sendMessage`;
-
-            fetch(url, {
+        // Telegram bildirimi sunucu tarafındaki API üzerinden gönderilir.
+        // Bot token'ı HTML içinde tutulmamalıdır.
+        async function sendTelegramNotification(title, content) {
+            const response = await fetch('/api/telegram-notify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'Markdown'
-                })
-            }).catch(err => console.log('Telegram send error:', err));
+                body: JSON.stringify({ title, content })
+            });
+
+            let result = {};
+            try { result = await response.json(); } catch (_) {}
+
+            if (!response.ok || !result.ok) {
+                throw new Error(result.error || 'Telegram bildirimi gönderilemedi.');
+            }
+            return true;
         }
 
         // R4 Auth
@@ -846,14 +845,16 @@
             });
 
             if(sendTg) {
-                sendTelegramNotification(title, content);
+                sendTelegramNotification(title, content)
+                    .then(() => alert("Mail buluta kaydedildi ve Telegram grubuna gönderildi."))
+                    .catch((err) => alert("Mail buluta kaydedildi; ancak Telegram gönderilemedi. Sunucu API ayarlarını kontrol et. Hata: " + err.message));
             }
 
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
             document.getElementById('sendTelegramCheck').checked = false;
             switchTab(tab);
-            alert("Mail başarıyla buluta yüklendi ve tüm cihazlara gönderildi!");
+            alert(sendTg ? "Mail buluta kaydedildi. Telegram gönderim sonucu ayrıca bildirilecek." : "Mail başarıyla buluta kaydedildi ve tüm cihazlara gönderildi!");
         }
 
         window.onload = function() {
@@ -872,6 +873,3 @@
     </script>
 </body>
 </html>
-```
-
-</ElicitationsGroup>
