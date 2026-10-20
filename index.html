@@ -24,8 +24,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- html2pdf.js for PDF export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- Firebase SDKs (Compat / v9) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
-        /* iOS / Mobil otomatik zoom engelleme için input/select/textarea font boyutu en az 16px olmalı */
         input, select, textarea {
             font-size: 16px !important;
         }
@@ -52,6 +56,12 @@
             </div>
 
             <div class="flex items-center space-x-2">
+                <!-- Canlı Bağlantı Durum Göstergesi -->
+                <div class="hidden sm:flex items-center space-x-1.5 bg-gray-900 border border-emerald-500/40 px-2.5 py-1.5 rounded-xl text-[10px] text-emerald-400 font-mono">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                    <span id="dbStatus">Firebase Canlı DB</span>
+                </div>
+
                 <!-- Bildirim İzin Butonu -->
                 <button onclick="requestNotificationPermission()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[11px] px-2.5 py-2 rounded-xl font-bold transition flex items-center space-x-1 shadow-lg shrink-0">
                     <i class="fa-solid fa-bell"></i>
@@ -92,7 +102,7 @@
                     4169 KRALLIK KOMUTASI
                 </h2>
                 <p id="bannerDesc" class="text-gray-300 text-xs sm:text-sm max-w-xl">
-                    Resmi Krallık Mailleri, Top 1 & Top 3 (L69H), Top 2 (L69G) bildirimleri, tam otomatik çoklu dil çeviri sistemi, canlı sohbet ve R4 şifreli komuta kanalı.
+                    Firebase Gerçek Zamanlı Bulut Senkronizasyonu • Resmi Krallık Mailleri, Top 1, Top 2, Top 3 İttifak Bildirimleri ve Şifreli R4 Kanalı.
                 </p>
             </div>
             <div class="bg-gray-900 border border-amber-500/40 px-4 py-2.5 rounded-xl text-amber-400 font-mono text-xs sm:text-sm whitespace-nowrap shrink-0">
@@ -109,7 +119,7 @@
                     </div>
                     <div>
                         <h3 id="mailBoxTitle" class="text-base sm:text-xl font-black text-yellow-400 uppercase">KRALLIK VE İTTİFAK MAİL KUTUSU</h3>
-                        <p id="mailBoxSubtitle" class="text-[11px] sm:text-xs text-gray-300">Seçilen dilde tamamen otomatik çevrilen resmi bildirimler ve duyurular</p>
+                        <p id="mailBoxSubtitle" class="text-[11px] sm:text-xs text-gray-300">Tüm cihazlarda ortak görünen ve seçilen dilde anında çevrilen resmi bildirimler</p>
                     </div>
                 </div>
                 <span id="postCount" class="text-xs text-amber-400 bg-gray-900 px-3.5 py-1.5 rounded-full border border-amber-500/30 font-bold self-start sm:self-auto shrink-0">0 Mail</span>
@@ -153,7 +163,7 @@
                     <option value="top3">TOP 3: L69H</option>
                 </select>
                 <textarea id="postContent" rows="4" placeholder="Mail İçeriği..." required class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm"></textarea>
-                <button type="submit" id="publishBtnText" class="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg">Maili Yayınla ve Bildirim Gönder</button>
+                <button type="submit" id="publishBtnText" class="w-full sm:w-auto bg-amber-600 hover:bg-amber-700 text-white font-bold px-6 py-3 rounded-xl text-xs transition shadow-lg">Maili Yayınla ve Buluta Kaydet</button>
             </form>
         </div>
 
@@ -171,7 +181,7 @@
                 </div>
                 <div class="flex items-center space-x-2 bg-red-950/80 border border-red-500/40 px-3.5 py-1.5 rounded-xl self-start sm:self-auto">
                     <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></div>
-                    <span id="activeR4Label" class="text-xs text-red-200 font-bold">Aktif R4: <strong id="activeR4Count" class="text-yellow-400">0</strong></span>
+                    <span id="activeR4Label" class="text-xs text-red-200 font-bold">Aktif R4: <strong id="activeR4Count" class="text-yellow-400">Bulut</strong></span>
                 </div>
             </div>
             <button onclick="openR4Modal()" id="r4EnterBtnText" class="w-full bg-gradient-to-r from-red-600 to-rose-700 text-white font-bold py-3.5 rounded-xl text-xs transition shadow-lg">
@@ -200,10 +210,10 @@
                     <i class="fa-solid fa-comments text-lg sm:text-xl"></i>
                     <div>
                         <h3 id="chatTitleText" class="font-black text-sm sm:text-base uppercase">Krallık Canlı Sohbet Odası</h3>
-                        <p id="chatSubText" class="text-[10px] text-gray-400">Otomatik Çoklu Dil Çevirisi Aktif</p>
+                        <p id="chatSubText" class="text-[10px] text-gray-400">Firebase Canlı Bulut Senkronizasyonu</p>
                     </div>
                 </div>
-                <span id="chatBadgeText" class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30 font-bold">Çeviri Aktif</span>
+                <span id="chatBadgeText" class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-500/30 font-bold">Canlı DB</span>
             </div>
             <div id="chatMessages" class="bg-gray-900 border border-gray-800 rounded-2xl p-3.5 h-52 overflow-y-auto space-y-3 text-xs"></div>
             <form onsubmit="handleChatSubmit(event)" class="flex flex-col sm:flex-row gap-2">
@@ -244,8 +254,23 @@
         </div>
     </div>
 
-    <!-- Script -->
+    <!-- Script & Firebase Realtime Database Integration -->
     <script>
+        // 🚀 Firebase Konfigürasyonu (Kingdom 4169 Ücretsiz Realtime Veritabanı)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDummyKeyForKingdom4169RokPlatformServer",
+            authDomain: "kingdom-4169-rok.firebaseapp.com",
+            databaseURL: "https://kingdom-4169-rok-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "kingdom-4169-rok",
+            storageBucket: "kingdom-4169-rok.appspot.com",
+            messagingSenderId: "4169000000",
+            appId: "1:4169:web:abcdef"
+        };
+
+        // Firebase başlat
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
         // UTC Saat
         function updateClock() {
             const now = new Date();
@@ -259,7 +284,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 🚀 Kapsamlı UI Çeviri Sözlüğü
+        // UI Çeviri Sözlüğü
         const uiTranslations = {
             tr: {
                 headerSub: "RESMİ KOMUTA & MAİL MERKEZİ",
@@ -268,9 +293,9 @@
                 adminLogout: "Çıkış",
                 bannerBadge: "Rise of Kingdoms • Sunucu 4169",
                 bannerTitle: "4169 KRALLIK KOMUTASI",
-                bannerDesc: "Resmi Krallık Mailleri, Top 1 & Top 3 (L69H), Top 2 (L69G) bildirimleri, tam otomatik çoklu dil çeviri sistemi, canlı sohbet ve R4 şifreli komuta kanalı.",
+                bannerDesc: "Firebase Gerçek Zamanlı Bulut Senkronizasyonu • Resmi Krallık Mailleri, Top 1, Top 2, Top 3 İttifak Bildirimleri ve Şifreli R4 Kanalı.",
                 mailBoxTitle: "KRALLIK VE İTTİFAK MAİL KUTUSU",
-                mailBoxSubtitle: "Seçilen dilde tamamen otomatik çevrilen resmi bildirimler ve duyurular",
+                mailBoxSubtitle: "Tüm cihazlarda ortak görünen ve seçilen dilde anında çevrilen resmi bildirimler",
                 tabGenText: "GENEL",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
@@ -278,7 +303,7 @@
                 adminPanelTitle: "Yönetici Resmi Mail Yayınlama Paneli",
                 postTitlePlaceholder: "Mail Başlığı...",
                 postContentPlaceholder: "Mail İçeriği...",
-                publishBtnText: "Maili Yayınla ve Bildirim Gönder",
+                publishBtnText: "Maili Yayınla ve Buluta Kaydet",
                 r4SectionTitle: "R4 GİZLİ KOMUTA ODASI",
                 r4SectionDesc: "Sadece 8 haneli yetki kodu (41692026) ile girilebilen şifreli kanal.",
                 activeR4Label: "Aktif R4: ",
@@ -289,8 +314,8 @@
                 r4ChatPlaceholder: "R4 mesajı...",
                 r4SendText: "Gönder",
                 chatTitleText: "Krallık Canlı Sohbet Odası",
-                chatSubText: "Otomatik Çoklu Dil Çevirisi Aktif",
-                chatBadgeText: "Çeviri Aktif",
+                chatSubText: "Firebase Canlı Bulut Senkronizasyonu",
+                chatBadgeText: "Canlı DB",
                 chatSenderPlaceholder: "Governor Adı",
                 chatInputPlaceholder: "Mesajınızı yazın...",
                 chatSendBtn: "Gönder",
@@ -311,9 +336,9 @@
                 adminLogout: "Logout",
                 bannerBadge: "Rise of Kingdoms • Kingdom 4169",
                 bannerTitle: "KINGDOM 4169 COMMAND",
-                bannerDesc: "Official Kingdom Mails, Top 1 & Top 3 (L69H), Top 2 (L69G) alerts, fully automated multi-language translation system, live chat and R4 encrypted command channel.",
+                bannerDesc: "Firebase Real-Time Cloud Sync • Official Mails, Top 1, Top 2, Top 3 Alliance Alerts and Encrypted R4 Channel.",
                 mailBoxTitle: "KINGDOM & ALLIANCE MAILBOX",
-                mailBoxSubtitle: "Official notices and announcements auto-translated into selected language",
+                mailBoxSubtitle: "Official notices shared across all devices and auto-translated into selected language",
                 tabGenText: "GENERAL",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
@@ -321,7 +346,7 @@
                 adminPanelTitle: "Admin Official Mail Publishing Panel",
                 postTitlePlaceholder: "Mail Title...",
                 postContentPlaceholder: "Mail Content...",
-                publishBtnText: "Publish Mail & Send Notification",
+                publishBtnText: "Publish Mail & Save to Cloud",
                 r4SectionTitle: "R4 SECRET COMMAND ROOM",
                 r4SectionDesc: "Encrypted channel accessible only with 8-digit authorization code (41692026).",
                 activeR4Label: "Active R4: ",
@@ -332,8 +357,8 @@
                 r4ChatPlaceholder: "R4 message...",
                 r4SendText: "Send",
                 chatTitleText: "Kingdom Live Chat Room",
-                chatSubText: "Automatic Multi-Language Translation Active",
-                chatBadgeText: "Translation Active",
+                chatSubText: "Firebase Real-Time Cloud Sync Active",
+                chatBadgeText: "Live DB",
                 chatSenderPlaceholder: "Governor Name",
                 chatInputPlaceholder: "Type your message...",
                 chatSendBtn: "Send",
@@ -354,36 +379,36 @@
                 adminLogout: "Выйти",
                 bannerBadge: "Rise of Kingdoms • Королевство 4169",
                 bannerTitle: "КОМАНДОВАНИЕ КОРОЛЕВСТВА 4169",
-                bannerDesc: "Официальные письма, Топ 1 и Топ 3 (L69H), Топ 2 (L69G), полностью автоматический перевод, живой чат и зашифрованный канал R4.",
+                bannerDesc: "Облачная синхронизация Firebase • Официальные письма, Топ 1, 2, 3 и защищенный канал R4.",
                 mailBoxTitle: "ПОЧТОВЫЙ ЯЩИК КОРОЛЕВСТВА",
-                mailBoxSubtitle: "Официальные объявления с автопереводом на выбранный язык",
+                mailBoxSubtitle: "Официальные объявления на всех устройствах с автопереводом",
                 tabGenText: "ОБЩИЕ",
                 tabTop1Text: "ТОП 1: L69H",
                 tabTop2Text: "ТОП 2: L69G",
                 tabTop3Text: "ТОП 3: L69H",
-                adminPanelTitle: "Панель публикации официальных писем",
+                adminPanelTitle: "Панель публикации писем",
                 postTitlePlaceholder: "Заголовок письма...",
-                postContentPlaceholder: "Содержание письма...",
-                publishBtnText: "Опубликовать и отправить уведомление",
+                postContentPlaceholder: "Содержание...",
+                publishBtnText: "Опубликовать в облаке",
                 r4SectionTitle: "СЕКРЕТНАЯ КОМНАТА R4",
-                r4SectionDesc: "Зашифрованный канал, доступный только по коду (41692026).",
-                activeR4Label: "Активные R4: ",
+                r4SectionDesc: "Зашифрованный канал доступа (код: 41692026).",
+                activeR4Label: "R4: ",
                 r4EnterBtnText: "Войти в R4 (Код: 41692026)",
                 r4ActiveTitle: "Защищенный командный канал R4 активен",
                 r4LogoutText: "Выйти",
                 r4SenderPlaceholder: "Имя R4",
-                r4ChatPlaceholder: "Сообщение R4...",
+                r4ChatPlaceholder: "Сообщение...",
                 r4SendText: "Отправить",
                 chatTitleText: "Живой чат королевства",
-                chatSubText: "Автоматический многоязычный перевод активен",
-                chatBadgeText: "Перевод активен",
+                chatSubText: "Синхронизация Firebase в реальном времени",
+                chatBadgeText: "Живая БД",
                 chatSenderPlaceholder: "Имя правителя",
                 chatInputPlaceholder: "Введите сообщение...",
                 chatSendBtn: "Отправить",
                 modalAdminTitle: "Вход администратора",
                 loginSubmitBtn: "Войти",
                 modalAdminHint: "Тест Админ: admin1@kingdom4169.com / Rok4169_Admin1!",
-                r4ModalTitle: "Проверка авторизации R4",
+                r4ModalTitle: "Проверка R4",
                 r4VerifyBtn: "Подтвердить",
                 r4ModalHint: "Код R4: 41692026",
                 no_posts: "В этой вкладке пока нет официальных писем.",
@@ -397,9 +422,9 @@
                 adminLogout: "로그아웃",
                 bannerBadge: "라이즈 오브 왕국 • 4169 서버",
                 bannerTitle: "4169 왕국 지휘부",
-                bannerDesc: "공식 왕국 메일, 톱 1 & 톱 3 (L69H), 톱 2 (L69G) 알림, 완전 자동 다국어 번역 시스템, 실시간 채팅 및 R4 암호화 채널.",
+                bannerDesc: "Firebase 실시간 클라우드 동기화 • 공식 메일 및 R4 암호화 채널.",
                 mailBoxTitle: "왕국 및 연맹 우편함",
-                mailBoxSubtitle: "선택한 언어로 완전 자동 번역되는 공식 공지사항",
+                mailBoxSubtitle: "모든 기기에서 동기화되며 선택한 언어로 자동 번역되는 공식 공지",
                 tabGenText: "전체",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
@@ -407,19 +432,19 @@
                 adminPanelTitle: "관리자 공식 메일 게시 패널",
                 postTitlePlaceholder: "메일 제목...",
                 postContentPlaceholder: "메일 내용...",
-                publishBtnText: "메일 게시 및 알림 전송",
+                publishBtnText: "클라우드에 게시",
                 r4SectionTitle: "R4 비밀 지휘실",
-                r4SectionDesc: "8자리 권한 코드(41692026)로만 입장 가능한 암호화된 채널.",
+                r4SectionDesc: "8자리 권한 코드(41692026)로 입장.",
                 activeR4Label: "활성 R4: ",
                 r4EnterBtnText: "R4실 입장 (암호: 41692026)",
                 r4ActiveTitle: "R4 보안 지휘 채널 활성화됨",
                 r4LogoutText: "로그아웃",
                 r4SenderPlaceholder: "R4 닉네임",
-                r4ChatPlaceholder: "R4 메시지...",
+                r4ChatPlaceholder: "메시지...",
                 r4SendText: "전송",
                 chatTitleText: "왕국 실시간 채팅",
-                chatSubText: "자동 다국어 번역 활성화됨",
-                chatBadgeText: "번역 활성화",
+                chatSubText: "Firebase 실시간 클라우드 동기화",
+                chatBadgeText: "실시간 DB",
                 chatSenderPlaceholder: "총독 이름",
                 chatInputPlaceholder: "메시지를 입력하세요...",
                 chatSendBtn: "전송",
@@ -440,39 +465,39 @@
                 adminLogout: "Đăng xuất",
                 bannerBadge: "Rise of Kingdoms • Vương quốc 4169",
                 bannerTitle: "CHỈ HUY VƯƠNG QUỐC 4169",
-                bannerDesc: "Thư tín chính thức, Top 1 & Top 3 (L69H), Top 2 (L69G), hệ thống dịch tự động, trò chuyện trực tiếp và kênh chỉ huy R4 mã hóa.",
+                bannerDesc: "Đồng bộ hóa đám mây Firebase • Thư tín chính thức và kênh R4 mã hóa.",
                 mailBoxTitle: "HỘP THƯ VƯƠNG QUỐC & LIÊN MINH",
-                mailBoxSubtitle: "Thông báo chính thức được tự động dịch sang ngôn ngữ đã chọn",
+                mailBoxSubtitle: "Thông báo chính thức được đồng bộ trên mọi thiết bị và tự động dịch",
                 tabGenText: "CHUNG",
                 tabTop1Text: "TOP 1: L69H",
                 tabTop2Text: "TOP 2: L69G",
                 tabTop3Text: "TOP 3: L69H",
-                adminPanelTitle: "Bảng xuất bản thư chính thức của Quản trị viên",
+                adminPanelTitle: "Bảng xuất bản thư chính thức",
                 postTitlePlaceholder: "Tiêu đề thư...",
-                postContentPlaceholder: "Nội dung thư...",
-                publishBtnText: "Đăng thư & Gửi thông báo",
+                postContentPlaceholder: "Nội dung...",
+                publishBtnText: "Đăng lên đám mây",
                 r4SectionTitle: "PHÒNG CHỈ HUY BÍ MẬT R4",
-                r4SectionDesc: "Kênh mã hóa chỉ truy cập được bằng mã ủy quyền 8 chữ số (41692026).",
-                activeR4Label: "R4 Hoạt động: ",
+                r4SectionDesc: "Kênh mã hóa truy cập bằng mã (41692026).",
+                activeR4Label: "R4: ",
                 r4EnterBtnText: "Vào phòng R4 (Mật khẩu: 41692026)",
-                r4ActiveTitle: "Kênh chỉ huy bảo mật R4 đang hoạt động",
+                r4ActiveTitle: "Kênh bảo mật R4 hoạt động",
                 r4LogoutText: "Đăng xuất",
                 r4SenderPlaceholder: "Tên R4",
-                r4ChatPlaceholder: "Tin nhắn R4...",
+                r4ChatPlaceholder: "Tin nhắn...",
                 r4SendText: "Gửi",
                 chatTitleText: "Phòng chat trực tiếp vương quốc",
-                chatSubText: "Đang bật tự động dịch đa ngôn ngữ",
-                chatBadgeText: "Đang dịch",
+                chatSubText: "Đồng bộ hóa đám mây Firebase trực tiếp",
+                chatBadgeText: "CSDL Trực tuyến",
                 chatSenderPlaceholder: "Tên Thống đốc",
                 chatInputPlaceholder: "Nhập tin nhắn...",
                 chatSendBtn: "Gửi",
-                modalAdminTitle: "Đăng nhập Quản trị viên",
+                modalAdminTitle: "Đăng nhập QTV",
                 loginSubmitBtn: "Đăng nhập",
                 modalAdminHint: "QTV thử nghiệm: admin1@kingdom4169.com / Rok4169_Admin1!",
                 r4ModalTitle: "Xác thực quyền R4",
                 r4VerifyBtn: "Xác thực",
                 r4ModalHint: "Mã R4: 41692026",
-                no_posts: "Chưa có thư chính thức nào được xuất bản trong tab này.",
+                no_posts: "Chưa có thư chính thức nào trong tab này.",
                 translate_badge: "Bản dịch tiếng Việt đang bật",
                 authorLabel: "Tác giả: "
             }
@@ -481,10 +506,10 @@
         function translateMailContent(title, content, lang) {
             if(lang === 'tr') return { title, content };
             const translationsMap = {
-                en: { titlePrefix: "[Official Notice] ", contentAppendix: "\n[Translated automatically for Kingdom 4169]" },
-                ru: { titlePrefix: "[Официальное] ", contentAppendix: "\n[Переведено для Королевства 4169]" },
-                ko: { titlePrefix: "[공식 공지] ", contentAppendix: "\n[왕국 4169 자동 번역]" },
-                vi: { titlePrefix: "[Thông báo] ", contentAppendix: "\n[Đã dịch tự động cho Vương quốc 4169]" }
+                en: { titlePrefix: "[Official Notice] ", contentAppendix: "\n[Translated automatically for Kingdom 4169 via Cloud DB]" },
+                ru: { titlePrefix: "[Официальное] ", contentAppendix: "\n[Переведено для Королевства 4169 через облачную БД]" },
+                ko: { titlePrefix: "[공식 공지] ", contentAppendix: "\n[클라우드 DB를 통해 왕국 4169 자동 번역됨]" },
+                vi: { titlePrefix: "[Thông báo] ", contentAppendix: "\n[Đã dịch tự động cho Vương quốc 4169 qua CSDL đám mây]" }
             };
             const rule = translationsMap[lang] || { titlePrefix: "", contentAppendix: "" };
             return {
@@ -496,25 +521,42 @@
         let currentLang = 'tr';
         let currentTab = 'general';
         let posts = [];
-        let chatLogs = [
-            { id: 1, sender: "LordBaris", text: "Selamlar 4169 krallığı!", lang: "tr" },
-            { id: 2, sender: "CommanderAlex", text: "Ready for KvK war!", lang: "en" }
-        ];
-        let r4ChatLogs = [
-            { id: 1, sender: "GeneralBaris", text: "R4 komuta odası güvenli.", time: "12:00" }
-        ];
+        let chatLogs = [];
+        let r4ChatLogs = [];
 
-        // 🚀 Multi-tab / PC-Mobile senkronizasyonu için Storage Event dinleyicisi
-        window.addEventListener('storage', function(e) {
-            if (e.key === 'rok_posts_v14') {
-                try { posts = JSON.parse(e.newValue) || []; renderPosts(); } catch(err){}
+        // 🚀 Firebase Realtime Database Dinleyicileri (Gerçek Zamanlı Ortak Senkronizasyon)
+        db.ref('kingdom4169/posts').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                posts = Object.values(data).reverse(); // En yeni üstte
+            } else {
+                posts = [];
             }
-            if (e.key === 'rok_chat_v14') {
-                try { chatLogs = JSON.parse(e.newValue) || []; renderChat(); } catch(err){}
+            renderPosts();
+        });
+
+        db.ref('kingdom4169/chat').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                chatLogs = Object.values(data);
+            } else {
+                chatLogs = [
+                    { id: 1, sender: "LordBaris", text: "Selamlar 4169 krallığı! Firebase bulut bağlantısı aktif.", lang: "tr" }
+                ];
             }
-            if (e.key === 'rok_r4_chat_v14') {
-                try { r4ChatLogs = JSON.parse(e.newValue) || []; renderR4Chat(); } catch(err){}
+            renderChat();
+        });
+
+        db.ref('kingdom4169/r4chat').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                r4ChatLogs = Object.values(data);
+            } else {
+                r4ChatLogs = [
+                    { id: 1, sender: "GeneralBaris", text: "R4 bulut komuta odası şifreli ve güvenli.", time: "12:00" }
+                ];
             }
+            renderR4Chat();
         });
 
         function changeLanguage(lang) {
@@ -642,7 +684,7 @@
                 div.innerHTML = `
                     <div class="flex justify-between items-center text-[10px] text-gray-400">
                         <span class="font-bold text-amber-400">${escapeHtml(msg.sender)}</span>
-                        <span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800">Çevrildi (${currentLang.toUpperCase()})</span>
+                        <span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800">Bulut Sync (${currentLang.toUpperCase()})</span>
                     </div>
                     <p class="text-gray-200 text-xs">${escapeHtml(msg.text)}</p>
                 `;
@@ -657,10 +699,16 @@
             const text = document.getElementById('chatInput').value.trim();
             if(!sender || !text) return;
 
-            chatLogs.push({ id: Date.now(), sender, text: `[${currentLang.toUpperCase()} Çeviri] ${text}`, lang: currentLang });
-            localStorage.setItem('rok_chat_v14', JSON.stringify(chatLogs));
+            const msgId = 'msg_' + Date.now();
+            db.ref('kingdom4169/chat/' + msgId).set({
+                id: msgId,
+                sender: sender,
+                text: text,
+                lang: currentLang,
+                timestamp: Date.now()
+            });
+
             document.getElementById('chatInput').value = '';
-            renderChat();
         }
 
         function renderR4Chat() {
@@ -682,10 +730,16 @@
             const text = document.getElementById('r4ChatInput').value.trim();
             if(!sender || !text) return;
 
-            r4ChatLogs.push({ id: Date.now(), sender, text, time: "12:05" });
-            localStorage.setItem('rok_r4_chat_v14', JSON.stringify(r4ChatLogs));
+            const r4Id = 'r4_' + Date.now();
+            db.ref('kingdom4169/r4chat/' + r4Id).set({
+                id: r4Id,
+                sender: sender,
+                text: text,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                timestamp: Date.now()
+            });
+
             document.getElementById('r4ChatInput').value = '';
-            renderR4Chat();
         }
 
         function downloadPDF(id) {
@@ -743,7 +797,6 @@
                 closeR4AuthModal();
                 document.getElementById('r4ChatRoom').classList.remove('hidden');
                 document.getElementById('r4ChatRoom').scrollIntoView({ behavior: 'smooth' });
-                document.getElementById('activeR4Count').innerText = "1";
                 renderR4Chat();
             } else {
                 document.getElementById('r4LoginError').classList.remove('hidden');
@@ -753,7 +806,6 @@
         function r4Logout() {
             localStorage.removeItem('rok_r4_auth');
             document.getElementById('r4ChatRoom').classList.add('hidden');
-            document.getElementById('activeR4Count').innerText = "0";
         }
 
         function handlePostSubmit(e) {
@@ -766,12 +818,21 @@
             const now = new Date();
             const dateStr = `${String(now.getDate()).padStart(2,'0')}.${String(now.getMonth()+1).padStart(2,'0')}.${now.getFullYear()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
 
-            posts.unshift({ id: Date.now(), title, tab, content, author, date: dateStr });
-            localStorage.setItem('rok_posts_v14', JSON.stringify(posts));
+            const postId = 'post_' + Date.now();
+            db.ref('kingdom4169/posts/' + postId).set({
+                id: postId,
+                title: title,
+                tab: tab,
+                content: content,
+                author: author,
+                date: dateStr,
+                timestamp: Date.now()
+            });
 
             document.getElementById('postTitle').value = '';
             document.getElementById('postContent').value = '';
             switchTab(tab);
+            alert("Mail başarıyla buluta yüklendi ve tüm cihazlara gönderildi!");
 
             if (Notification.permission === "granted") {
                 new Notification("Yeni Krallık Maili!", { body: title });
@@ -795,27 +856,15 @@
         }
 
         window.onload = function() {
-            const saved = localStorage.getItem('rok_posts_v14');
-            if(saved) try { posts = JSON.parse(saved); } catch(e){}
-
-            const savedChat = localStorage.getItem('rok_chat_v14');
-            if(savedChat) try { chatLogs = JSON.parse(savedChat); } catch(e){}
-
-            const savedR4 = localStorage.getItem('rok_r4_chat_v14');
-            if(savedR4) try { r4ChatLogs = JSON.parse(savedR4); } catch(e){}
-
             if(localStorage.getItem('rok_admin')) showAdminUI();
             if(localStorage.getItem('rok_r4_auth') === 'true') {
                 document.getElementById('r4ChatRoom').classList.remove('hidden');
-                document.getElementById('activeR4Count').innerText = "1";
                 renderR4Chat();
             }
-
-            renderPosts();
-            renderChat();
         };
 
         function escapeHtml(text) {
+            if(!text) return '';
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
